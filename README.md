@@ -18,9 +18,9 @@
 
 | 系统 | 架构 | 安装包 | 说明 |
 | --- | --- | --- | --- |
-| Windows | x64 | `像素画板 Setup 1.0.0.exe` | NSIS 安装程序 |
-| macOS | Apple Silicon（M1–M5） | `像素画板-1.0.0-arm64.dmg` | 原生运行，无需转译 |
-| macOS | Intel | `像素画板-1.0.0.dmg` | x64 |
+| Windows | x64 | `pixel-board-Setup-1.0.0-win-x64.exe` | NSIS 安装程序 |
+| macOS | Apple Silicon（M1–M5） | `pixel-board-1.0.0-mac-arm64.dmg` | 原生运行，无需转译 |
+| macOS | Intel | `pixel-board-1.0.0-mac-x64.dmg` | x64 |
 
 > macOS 安装包未签名（无 Apple 开发者证书），首次打开会提示「无法验证开发者」：右键 App → **打开**，或 系统设置 → 隐私与安全性 → **仍要打开**。
 
