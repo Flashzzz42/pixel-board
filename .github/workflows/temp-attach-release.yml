@@ -16,14 +16,23 @@ jobs:
           run-id: 31075515596
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload DMGs to Release v1.0.0
+      - name: Rename and upload mac installers to Release v1.0.0
         run: |
           set -e
           echo "=== downloaded tree ==="
           find . -maxdepth 3 | sort
-          find . \( -name "*.dmg" -o -name "*.zip" \) -print0 | while IFS= read -r -d '' f; do
-            echo ">> uploading $f"
-            gh release upload v1.0.0 "$f" --clobber -R "${{ github.repository }}"
-          done
+          work=$(mktemp -d)
+          while IFS= read -r -d '' f; do
+            base=$(basename "$f")
+            ext="${base##*.}"
+            if [[ "$base" == *arm64* ]]; then
+              out="pixel-board-1.0.0-mac-arm64.$ext"
+            else
+              out="pixel-board-1.0.0-mac-x64.$ext"
+            fi
+            cp "$f" "$work/$out"
+            echo ">> uploading $out"
+            gh release upload v1.0.0 "$work/$out" --clobber -R "${{ github.repository }}"
+          done < <(find . \( -name "*.dmg" -o -name "*.zip" \) -print0)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
