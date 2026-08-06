@@ -6,6 +6,8 @@ on:
 jobs:
   attach:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download mac artifact from previous run
         uses: actions/download-artifact@v4
