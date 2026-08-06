@@ -22,6 +22,8 @@
 | macOS | Apple Silicon（M1–M5） | `pixel-board-1.0.0-mac-arm64.dmg` | 原生运行，无需转译 |
 | macOS | Intel | `pixel-board-1.0.0-mac-x64.dmg` | x64 |
 
+> 每个 mac 版本另有同名 `.zip`（解压即用），在 [Release v1.0.0](https://github.com/Flashzzz42/pixel-board/releases/tag/v1.0.0) 资产中。
+
 > macOS 安装包未签名（无 Apple 开发者证书），首次打开会提示「无法验证开发者」：右键 App → **打开**，或 系统设置 → 隐私与安全性 → **仍要打开**。
 
 ## 本地使用
