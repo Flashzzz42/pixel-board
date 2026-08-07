@@ -1,6 +1,11 @@
 # 依赖与构建产物
 node_modules/
 dist/
+ui/
+
+# 本地 Tauri 打包工程（复用 D:\Pack_necessary\tauri 模板，不进入公开仓库）
+src-tauri/
+scripts/
 
 # 本地配置
 .claude/

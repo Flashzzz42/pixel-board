@@ -250,7 +250,8 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .size-row input{flex:1;min-width:0;padding:5px;border:1px solid #ccc;border-radius:6px;font-size:16px}
 .select-row{display:none;gap:8px;margin-top:10px}
 .select-row.show{display:flex}
-.select-row .btn-plain{flex:1;padding:7px 4px;font-size:14px;text-align:center}
+.select-row .btn-plain{flex:1;padding:7px 4px;font-size:14px;text-align:center;transition:transform .08s ease, background-color .15s ease}
+.select-row .btn-plain:active{transform:scale(.93);background:#e4e4ea}
 .ruler-popup{position:fixed;z-index:60;background:#fff;border:1px solid #ccc;border-radius:8px;
   box-shadow:0 4px 14px rgba(0,0,0,.18);padding:6px;display:flex;flex-direction:column;gap:2px}
 .ruler-popup button{background:none;border:none;padding:7px 12px;font-size:14px;border-radius:6px;
@@ -272,6 +273,8 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .slider-label{flex:none}
 .slider-row input[type=range]{flex:1;min-width:0}
 .slider-row span{min-width:38px;text-align:right;font-family:Consolas,monospace;font-size:15px;color:#333}
+.size-lock-hint{margin:8px 0 0;font-size:13px;color:#d97706;line-height:1.5}
+body.dark .size-lock-hint{color:#f0b45c}
 .tips{font-size:15px;color:#666;line-height:1.8}
 .tips p{margin:8px 0 0}
 .tips p.tips-h{margin:12px 0 3px;font-weight:600;color:#333;font-size:14px}
@@ -288,19 +291,31 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .draft-lib-head{flex:none;display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .draft-lib-head span{font-size:15px;font-weight:600;color:#333}
 .draft-back-btn{margin-left:auto;padding:6px 12px;font-size:14px}
-.draft-lib-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,1fr);
-  grid-auto-rows:1fr;gap:10px}
-.draft-slot{position:relative;border:1px dashed #c9c9d6;border-radius:8px;background:#fafafc;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
-.draft-slot.filled{border-style:solid;border-color:#d8d8e0;background:#fff}
-.draft-add{font-size:14px;color:#999;text-align:center;line-height:1.6}
+.draft-lib-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  grid-auto-rows:minmax(200px,auto);gap:10px;align-content:start;overflow-y:auto;padding:2px}
+.draft-card{position:relative;border:1px solid #d8d8e0;border-radius:8px;background:#fff;
+  cursor:pointer;overflow:hidden;display:flex;flex-direction:column;transition:border-color .12s,box-shadow .12s}
+.draft-card:hover{border-color:#4a6db5;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.draft-card.current{border-color:#4a6db5;box-shadow:0 0 0 2px rgba(74,109,181,.35)}
+.draft-thumb-box{flex:none;width:100%;aspect-ratio:1/1;background:#fff;display:flex;align-items:center;justify-content:center}
 .draft-thumb{image-rendering:pixelated;width:100%;height:100%;object-fit:contain}
-.draft-info{position:absolute;left:0;right:0;bottom:0;font-size:11px;color:#888;
-  text-align:center;background:rgba(255,255,255,.85);padding:1px 0}
-.draft-del{position:absolute;top:4px;right:4px;width:20px;height:20px;border:none;border-radius:50%;
-  background:rgba(225,29,72,.9);color:#fff;font-size:12px;line-height:1;cursor:pointer;
-  display:none;align-items:center;justify-content:center;padding:0}
-.draft-slot.filled:hover .draft-del{display:flex}
+.draft-current-tag{position:absolute;top:4px;left:4px;font-size:10px;color:#fff;background:#4a6db5;
+  border-radius:4px;padding:1px 5px}
+.draft-name{flex:none;padding:4px 6px 0;font-size:12px;color:#333;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.draft-name-input{flex:none;margin:4px 6px 0;font-size:12px;width:calc(100% - 12px);box-sizing:border-box;
+  border:1px solid #4a6db5;border-radius:4px;padding:2px 4px}
+.draft-meta{flex:none;padding:2px 6px 6px;font-size:11px;color:#888}
+.draft-ops{position:absolute;top:4px;right:4px;display:flex;gap:4px;opacity:0;transition:opacity .12s}
+.draft-card:hover .draft-ops{opacity:1}
+.draft-ops button{width:20px;height:20px;border:none;border-radius:50%;background:rgba(35,36,45,.75);
+  color:#fff;font-size:11px;line-height:1;cursor:pointer;padding:0}
+.draft-ops button:hover{background:rgba(225,29,72,.9)}
+.draft-ops button[data-act="rename"]:hover{background:rgba(74,109,181,.95)}
+.draft-ops button[data-act="dup"]:hover{background:rgba(37,130,90,.95)}
+.draft-empty{grid-column:1/-1;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:14px;color:#999;line-height:1.8;padding:40px 0}
+.draft-new-btn{padding:6px 12px;font-size:14px}
 
 /* ===== 深色模式覆盖 ===== */
 body.dark{background:#191a21;color:#e3e4ea}
@@ -311,7 +326,9 @@ body.dark aside h2,body.dark .bead-panel-head{color:#cdd0dd;border-bottom-color:
 body.dark .status{background:rgba(35,36,45,.92);color:#b6b9c8}
 body.dark .tools button,body.dark .btn-plain,body.dark .undo-redo-stack button,body.dark .corner-btn,body.dark .export-empty-btn,body.dark .bead-title,body.dark .theme-btn{background:#23242d;border-color:#4a4b58;color:#e3e4ea}
 body.dark .tools button:hover,body.dark .corner-btn:hover,body.dark .undo-redo-stack button:hover,body.dark .theme-btn:hover{background:#2e2f3a}
+body.dark .tools button.active{background:#2b3a5c;border-color:#4a6db5;color:#9db8f0}
 body.dark .corner-btn:active,body.dark .undo-redo-stack button:active,body.dark .theme-btn:active{background:#373845}
+body.dark .select-row .btn-plain:active{background:#373845}
 body.dark .corner-btn:disabled,body.dark .undo-redo-stack button:disabled{background:#20212a}
 body.dark .corner-btn.active{background:#2b3a5c;border-color:#4a6db5;color:#9db8f0}
 body.dark .code-count{background:#23242d;border-color:#3a3b47;color:#b6b9c8}
@@ -320,13 +337,24 @@ body.dark .size-row input,body.dark #hexText{background:#2a2b35;border-color:#4a
 body.dark .match-popup,body.dark .ruler-popup,body.dark .wheel-box{background:#23242d;border-color:#4a4b58}
 body.dark .match-popup button{color:#e3e4ea}
 body.dark .match-popup button:hover{background:#2e2f3a}
+body.dark .match-popup button.active{background:#2b3a5c;color:#9db8f0}
 body.dark .match-popup button:disabled{color:#8b8e9f}
 body.dark .match-popup .match-submenu{background:#262732;border-color:#3a3b47}
 body.dark .export-inline{background:#20212a;border-color:#3a3b47}
+body.dark .export-empty-row{border-top-color:#3a3b47}
 body.dark .export-empty-label{color:#9a9dad}
-body.dark .draft-slot{background:#2a2b35;border-color:#3a3b47}
-body.dark .draft-slot.filled{border-color:#4a4b58;background:#23242d}
-body.dark .draft-info{color:#9a9dad;background:rgba(30,31,40,.85)}
+body.dark .export-inline button{color:#fff}
+body.dark .export-empty-btn{color:#fff}
+body.dark .export-inline button:hover{background:#2e2f3a}
+body.dark .export-empty-btn:hover{background:#2e2f3a}
+body.dark .export-empty-btn.active{background:#2b3a5c;border-color:#4a6db5;color:#9db8f0}
+body.dark .draft-card{background:#23242d;border-color:#3a3b47}
+body.dark .draft-card.current{border-color:#4a6db5}
+body.dark .draft-thumb-box{background:#2a2b35}
+body.dark .draft-name{color:#e3e4ea}
+body.dark .draft-meta{color:#9a9dad}
+body.dark .draft-empty{color:#8b8e9f}
+body.dark .draft-name-input{background:#2a2b35;border-color:#4a6db5;color:#e3e4ea}
 body.dark .tips{color:#b6b9c8}
 body.dark .tips p.tips-h{color:#e3e4ea}
 body.dark .tips summary{color:#cdd0dd;border-bottom-color:#3a3b47}
@@ -353,6 +381,7 @@ body.dark .history .h-swatch{background:#2a2b35}
       <div class="actions">
         <button class="btn-plain" id="applySizeBtn">应用尺寸</button>
       </div>
+      <p class="size-lock-hint" id="sizeLockHint" style="display:none">🔒 已手动绘制，尺寸已锁定（撤销到空白可解除锁定）</p>
       <div class="slider-row">
         <span class="slider-label">正方形</span>
         <input type="range" id="squareSlider" min="1" max="500" value="200">
@@ -381,6 +410,7 @@ body.dark .history .h-swatch{background:#2a2b35}
           </div>
         </div>
         <button class="btn-plain" id="clearBtn">🗑 清空画布</button>
+        <button class="btn-plain" id="clearTracesBtn">🧽 清除作画痕迹</button>
         <div class="zoom-row">
           显示倍率
           <select id="zoom">
@@ -399,6 +429,7 @@ body.dark .history .h-swatch{background:#2a2b35}
       <h2>画布草稿库</h2>
       <div class="actions">
         <button class="btn-plain" id="draftLibBtn">🗂 画布草稿库</button>
+        <button class="btn-plain" id="saveDraftBtn">💾 保存作画</button>
       </div>
     </section>
     <details class="tips">
@@ -426,7 +457,8 @@ body.dark .history .h-swatch{background:#2a2b35}
     </div>
     <div class="draft-lib" id="draftLib" style="display:none">
       <div class="draft-lib-head">
-        <span id="draftLibCount">画布草稿库（0/10）</span>
+        <span id="draftLibCount">画布草稿库（0）</span>
+        <button class="btn-plain draft-new-btn" id="draftNewBtn">＋ 新建画布</button>
         <button class="btn-plain draft-back-btn" id="draftBackBtn">↩ 返回画布</button>
       </div>
       <div class="draft-lib-grid" id="draftLibGrid"></div>
@@ -601,15 +633,81 @@ body.dark .history .h-swatch{background:#2a2b35}
   }
 
   // ---- 撤销 / 重做 ----
-  // 快照同时保存像素颜色与色卡编号，撤销/重做一并还原，避免撤回后丢失标注编号
+  // 快照保存像素颜色、色卡编号与画布上下文，撤销/重做一并还原。
+  // 画布上下文（导入原图、匹配色卡、编号开关、尺寸锁定、标尺）也会被操作修改，
+  // 若只还原像素/编号，撤回「清空画布」就会恢复画面却丢掉原图信息，导致后续缩放/匹配用错数据。
   const MAX_UNDO=50;
   let undoStack=[];
   let redoStack=[];
   function snapshot(){
-    return {pixels:new Uint8ClampedArray(pixels), codes:cellCodeIdx?new Uint16Array(cellCodeIdx):null};
+    return {pixels:new Uint8ClampedArray(pixels), codes:cellCodeIdx?new Uint16Array(cellCodeIdx):null, ctx:contextState()};
+  }
+  // 采集当前画布上下文。lastImport 只存引用（原图快照数组从不原地修改、只会整体替换），
+  // 避免每份撤销快照复制整幅像素导致 50 份历史占爆存储。
+  function contextState(){
+    const c={};
+    if(lastImported&&lastImported.data&&lastImported.data.pixels){
+      c.lastImport={w:lastImported.w,h:lastImported.h,pixels:lastImported.data.pixels};
+    }
+    if(importedImgDataURL) c.oimg=importedImgDataURL;
+    if(matchedCard) c.card=matchedCard.id;
+    c.showCodes=!!showCodes;
+    c.userEdited=!!userEdited;
+    if(rulers.length) c.rulers=rulers.map(r=>({a:{gx:r.a.gx,gy:r.a.gy},b:{gx:r.b.gx,gy:r.b.gy},off:r.off}));
+    return c;
+  }
+  function restoreContextState(c){
+    if(c.lastImport){
+      lastImported={w:c.lastImport.w,h:c.lastImport.h,data:{pixels:c.lastImport.pixels}};
+    }else{
+      lastImported=null;
+    }
+    // 原图高分辨率像素：异步恢复 Image 元素与原始像素（与 applyDraft 相同，token 防误装）
+    importedImg=null; origImg=null;
+    importedImgDataURL=c.oimg||null;
+    restoreImgToken++;
+    if(c.oimg){
+      const token=++restoreImgToken;
+      const im=new Image();
+      im.onload=function(){
+        if(token!==restoreImgToken) return;
+        importedImg=im;
+        origImg=readImageRaw(im)||null;
+      };
+      im.src=c.oimg;
+    }
+    matchedPalette=null; matchedCard=null;
+    if(c.card){
+      const card=cardById(c.card);
+      if(card){ matchedPalette=buildMatchPalette(c.card); matchedCard=card; }
+    }else if(cellCodeIdx){
+      cellCodeIdx.fill(NO_CODE);   // 无匹配色卡时编号无意义，清空避免残留
+    }
+    showCodes=!!c.showCodes;
+    updateCodeBtn();
+    if(typeof refreshMatchActive==='function') refreshMatchActive();
+    rulers=Array.isArray(c.rulers)?c.rulers:[];
+    userEdited=!!c.userEdited;
+    updateSizeLock();
   }
   function samePixels(a,b){
     for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false;
+    return true;
+  }
+  // 两个画布上下文是否等价（用于「像素没变但上下文变了」也要可撤销的判断）
+  function sameContext(a,b){
+    if(!!a.userEdited!==!!b.userEdited) return false;
+    if((a.oimg||null)!==(b.oimg||null)) return false;
+    const la=a.lastImport||null, lb=b.lastImport||null;
+    if(la!==lb){ if(!la||!lb||la.w!==lb.w||la.h!==lb.h||la.pixels!==lb.pixels) return false; }
+    if((a.card||null)!==(b.card||null)) return false;
+    if(!!a.showCodes!==!!b.showCodes) return false;
+    const ra=a.rulers||[], rb=b.rulers||[];
+    if(ra.length!==rb.length) return false;
+    for(let i=0;i<ra.length;i++){
+      if(ra[i].off!==rb[i].off||ra[i].a.gx!==rb[i].a.gx||ra[i].a.gy!==rb[i].a.gy||
+         ra[i].b.gx!==rb[i].b.gx||ra[i].b.gy!==rb[i].b.gy) return false;
+    }
     return true;
   }
   function pushUndo(snap){
@@ -617,8 +715,10 @@ body.dark .history .h-swatch{background:#2a2b35}
     if(undoStack.length>MAX_UNDO) undoStack.shift();
     redoStack.length=0;
     syncUndoRedo();
+    scheduleAutoSave();
   }
   function restoreSnap(s){
+    if(s.ctx) restoreContextState(s.ctx);
     pixels.set(s.pixels);
     if(s.codes&&cellCodeIdx) cellCodeIdx.set(s.codes);
   }
@@ -628,6 +728,7 @@ body.dark .history .h-swatch{background:#2a2b35}
     restoreSnap(undoStack.pop());
     syncUndoRedo();
     render();
+    scheduleAutoSave();
   }
   function redo(){
     if(!redoStack.length) return;
@@ -635,6 +736,7 @@ body.dark .history .h-swatch{background:#2a2b35}
     restoreSnap(redoStack.pop());
     syncUndoRedo();
     render();
+    scheduleAutoSave();
   }
   function syncUndoRedo(){
     const ub=document.getElementById('undoBtn'), rb=document.getElementById('redoBtn');
@@ -759,14 +861,14 @@ body.dark .history .h-swatch{background:#2a2b35}
     if(rulerA || rulerPlacing || rulers.length){
       if(rulerPlacing && rulerB){
         // 放置预览：实线 + 随鼠标移动的两条垂直平行线段 + 尺寸线
-        const off=rulerPreviewMouse ? clampOff(signedOffset(rulerA,rulerB,rulerPreviewMouse)) : 0;
+        const off=rulerPreviewMouse ? clampOff(signedOffset(rulerA,rulerB,rulerPreviewMouse)/mag) : 0;
         const ax=o.ox+rulerA.gx*gs.w/GRID_W, ay=o.oy+rulerA.gy*gs.h/GRID_H;
         const bx=o.ox+rulerB.gx*gs.w/GRID_W, by=o.oy+rulerB.gy*gs.h/GRID_H;
-        drawDim(ctx,rulerA,rulerB,ax,ay,bx,by,off,0.7);
+        drawDim(ctx,rulerA,rulerB,ax,ay,bx,by,off,gs.w/GRID_W,0.7);
       }else if(rulerA){
         const ax=o.ox+rulerA.gx*gs.w/GRID_W;
         const ay=o.oy+rulerA.gy*gs.h/GRID_H;
-        ctx.fillStyle='#e11d48';
+        ctx.fillStyle='#00c853';
         ctx.beginPath(); ctx.arc(ax,ay,4,0,Math.PI*2); ctx.fill();
       }
       const hi = rulerMenuIndex>=0 ? rulerMenuIndex : (tool==='ruler' ? rulerHoverIndex : -1);
@@ -784,6 +886,21 @@ body.dark .history .h-swatch{background:#2a2b35}
           const py=rulerHoverPart==='a'?ay:by;
           ctx.beginPath();
           ctx.arc(px,py,rad,0,Math.PI*2);
+          ctx.stroke();
+        }else if(rulerMenuIndex<0 && (rulerHoverPart==='lineA'||rulerHoverPart==='lineB')){
+          // 选中可调节的平行直线（尺寸界线）：高亮整条线
+          const ang=Math.atan2(by-ay, bx-ax);
+          const nx=-Math.sin(ang), ny=Math.cos(ang);
+          const offPx=r.off*mag;
+          const sgn=offPx>=0?1:-1;
+          const cxp=rulerHoverPart==='lineA'?ax:bx;
+          const cyp=rulerHoverPart==='lineA'?ay:by;
+          ctx.strokeStyle='rgba(0,200,83,0.9)';
+          ctx.lineWidth=3;
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.moveTo(cxp-nx*14*mag*sgn, cyp-ny*14*mag*sgn);
+          ctx.lineTo(cxp+nx*(offPx+12*mag*sgn), cyp+ny*(offPx+12*mag*sgn));
           ctx.stroke();
         }else{
           // 选中整条标注：两端小半圆 + 平行直虚线（胶囊形）
@@ -807,7 +924,7 @@ body.dark .history .h-swatch{background:#2a2b35}
       for(const r of rulers){
         const ax=o.ox+r.a.gx*gs.w/GRID_W, ay=o.oy+r.a.gy*gs.h/GRID_H;
         const bx=o.ox+r.b.gx*gs.w/GRID_W, by=o.oy+r.b.gy*gs.h/GRID_H;
-        drawDim(ctx,r.a,r.b,ax,ay,bx,by,r.off,1);
+        drawDim(ctx,r.a,r.b,ax,ay,bx,by,r.off,gs.w/GRID_W,1);
       }
     }
     if(exportRectMode&&exportRect){
@@ -858,6 +975,7 @@ body.dark .history .h-swatch{background:#2a2b35}
       ctx.setLineDash([]);
     }
     updateCodeCount();
+    updateSizeLock();
   }
 
   // ---- 当前颜色 ----
@@ -1469,7 +1587,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     for(let i=0;i<selectionMask.length;i++){
       if(selectionMask[i]) setCell(i%GRID_W, Math.floor(i/GRID_W), 255,255,255,true);
     }
-    if(!samePixels(before.pixels,pixels)) pushUndo(before);
+    if(!samePixels(before.pixels,pixels)){ pushUndo(before); markEdited(); }
     drawSelectionOverlay();
     render();
     statusEl.textContent='已删除选中区域的 '+countSel()+' 个像素';
@@ -1500,7 +1618,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
         cellCodeIdx[y*GRID_W+x]=idx;
       }
     }
-    if(anyChange) pushUndo(before);
+    if(anyChange){ pushUndo(before); markEdited(); }
     drawSelectionOverlay();
     render();
     statusEl.textContent=matched
@@ -1548,18 +1666,23 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     rulerA=null; rulerB=null; rulerPlacing=false; rulerPreviewMouse=null;
   }
   function commitRuler(e){
-    const off=clampOff(signedOffset(rulerA,rulerB,evToGridF(e)));
+    const off=clampOff(signedOffset(rulerA,rulerB,evToGridF(e))/mag);
     rulers.push({a:rulerA, b:rulerB, off:off});
     const m=rulerMeasure(rulerA,rulerB);
     const s=m.mm>30 ? (m.mm/10).toFixed(2)+' cm' : m.mm.toFixed(2)+' mm';
-    statusEl.textContent='标尺：'+m.cells.toFixed(2)+' 格 ≈ '+s;
+    statusEl.textContent='标尺：'+fmtCells(m.cells)+' 格  '+s;
     rulerA=null; rulerB=null; rulerPlacing=false; rulerPreviewMouse=null;
     render();
+    scheduleAutoSave();
   }
   function rulerMeasure(a,b){
     const cells=Math.hypot(b.gx-a.gx, b.gy-a.gy);
     const mm=cells*MM_PER_CELL;
     return {cells, mm};
+  }
+  // 格数显示：整数显示整数，小数保留一位
+  function fmtCells(cells){
+    return Number.isInteger(cells) ? String(cells) : cells.toFixed(1);
   }
   function rulerPoint(g){
     const x=Math.min(GRID_W,Math.max(0,Math.round(g.gx)));
@@ -1585,6 +1708,21 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       const bx=o.ox+r.b.gx*gs.w/GRID_W, by=o.oy+r.b.gy*gs.h/GRID_H;
       if(Math.hypot(px-ax,py-ay)<10) return {index:i, part:'a'};
       if(Math.hypot(px-bx,py-by)<10) return {index:i, part:'b'};
+      // 箭头尺寸线：随 off 偏移的平行线，命中后可拖动调节 off（改变两条尺寸界线长度）
+      const ddx=bx-ax, ddy=by-ay;
+      const len=Math.hypot(ddx,ddy);
+      if(len>=0.01){
+        const nx=-ddy/len, ny=ddx/len;
+        const offPx=r.off*mag;
+        const ex1=ax+nx*offPx, ey1=ay+ny*offPx;
+        const ex2=bx+nx*offPx, ey2=by+ny*offPx;
+        if(distToSeg(px,py,ex1,ey1,ex2,ey2)<7) return {index:i, part:'dim'};
+        // 两条平行直线（过两端点、垂直 a-b 的尺寸界线）：命中后拖动可改变标尺长度
+        const sgn=offPx>=0?1:-1;
+        const extBase=14*mag, extTip=12*mag;
+        if(distToSeg(px,py, ax-nx*extBase*sgn,ay-ny*extBase*sgn, ax+nx*(offPx+extTip*sgn),ay+ny*(offPx+extTip*sgn))<8) return {index:i, part:'lineA'};
+        if(distToSeg(px,py, bx-nx*extBase*sgn,by-ny*extBase*sgn, bx+nx*(offPx+extTip*sgn),by+ny*(offPx+extTip*sgn))<8) return {index:i, part:'lineB'};
+      }
       if(distToSeg(px,py,ax,ay,bx,by)<7) return {index:i, part:'line'};
     }
     return null;
@@ -1598,72 +1736,68 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     c.closePath();
     c.fill();
   }
-  function drawDim(c, a, b, ax,ay, bx,by, off, alpha){
+  function drawDim(c, a, b, ax,ay, bx,by, offFit, cellPx, alpha){
     const ddx=bx-ax, ddy=by-ay;
     const len=Math.hypot(ddx,ddy);
     if(len<0.01) return;
+    // 标注随格栅等比例缩放：s = 当前单元格像素 / 适配视图单元格像素，off 存的是适配视图像素
+    const s=Math.max(0.05, cellPx/fitCell);
+    const off=offFit*s;
+    const col='#00c853';
     const ux=ddx/len, uy=ddy/len;
     const nx=-uy, ny=ux;
     const ex1=ax+nx*off, ey1=ay+ny*off;
     const ex2=bx+nx*off, ey2=by+ny*off;
+    // 单色线段绘制
+    function seg(x1,y1,x2,y2,w){
+      c.strokeStyle=col; c.lineWidth=w*s;
+      c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+    }
     // 实线：连接两测量点（不透明）
-    c.strokeStyle='#e11d48';
-    c.lineWidth=3;
-    c.beginPath(); c.moveTo(ax,ay); c.lineTo(bx,by); c.stroke();
+    seg(ax,ay,bx,by,3);
     // 尺寸界线（两平行线段）：与标注同色，两端各超出一点（测量点端要超过圆点可见）
-    c.strokeStyle='#e11d48';
-    c.lineWidth=2.5;
-    const extBase=14; // 测量点外侧伸出长度
-    const extTip=12;  // 尺寸线外侧伸出长度
+    const extBase=14*s; // 测量点外侧伸出长度
+    const extTip=12*s;  // 尺寸线外侧伸出长度
     const sgn=off>=0 ? 1 : -1;  // 尺寸线所在侧，保证两方向延伸一致
-    c.beginPath();
-    c.moveTo(ax-nx*extBase*sgn, ay-ny*extBase*sgn);
-    c.lineTo(ex1+nx*extTip*sgn, ey1+ny*extTip*sgn);
-    c.moveTo(bx-nx*extBase*sgn, by-ny*extBase*sgn);
-    c.lineTo(ex2+nx*extTip*sgn, ey2+ny*extTip*sgn);
-    c.stroke();
+    seg(ax-nx*extBase*sgn, ay-ny*extBase*sgn, ex1+nx*extTip*sgn, ey1+ny*extTip*sgn, 2.5);
+    seg(bx-nx*extBase*sgn, by-ny*extBase*sgn, ex2+nx*extTip*sgn, ey2+ny*extTip*sgn, 2.5);
     // 尺寸线/箭头/文字：预览时半透明
     c.save();
     if(alpha<1) c.globalAlpha=alpha;
-    // 尺寸文字
+    // 标注文字：mm→cm，格式 "xxcm[xx格]"
     const mtx=rulerMeasure(a,b);
-    const text=mtx.mm>30 ? (mtx.mm/10).toFixed(2)+' cm' : (mtx.mm>=10 ? mtx.mm.toFixed(1)+' mm' : mtx.mm.toFixed(2)+' mm');
-    c.font='bold 17px sans-serif';
-    const textW=c.measureText(text).width;
-    const arrowLen=8;
+    const cmTxt=String(parseFloat((mtx.mm/10).toFixed(2)))+'cm['+fmtCells(mtx.cells)+'格]';
+    c.font='bold '+Math.max(5,Math.round(17*s))+'px sans-serif';
+    const arrowLen=8*s;
     const mx=(ex1+ex2)/2, my=(ey1+ey2)/2;
-    // 尺寸线：两段，中间留出文字间隙
-    c.strokeStyle='#e11d48';
-    c.lineWidth=3;
-    const gt=textW/2+5;
-    const s1=arrowLen+1, e1=len/2-gt;
-    const s2=len/2+gt, e2=len-(arrowLen+1);
-    if(e1>s1){
-      c.beginPath();
-      c.moveTo(ex1+ddx*s1/len, ey1+ddy*s1/len);
-      c.lineTo(ex1+ddx*e1/len, ey1+ddy*e1/len);
-      c.stroke();
-    }
-    if(e2>s2){
-      c.beginPath();
-      c.moveTo(ex1+ddx*s2/len, ey1+ddy*s2/len);
-      c.lineTo(ex1+ddx*e2/len, ey1+ddy*e2/len);
-      c.stroke();
-    }
-    // 箭头：尖端朝外，箭尾指向文字方向
-    c.fillStyle='#e11d48';
-    drawArrow(c,ex1,ey1, ux,uy, arrowLen, 3.5);
-    drawArrow(c,ex2,ey2, -ux,-uy, arrowLen, 3.5);
+    const w=c.measureText(cmTxt).width;
+    const tooShort=len<w+16*s;
+    // 完整双箭头实线：中间无间隔，两端指向内侧的箭头
+    seg(ex1,ey1,ex2,ey2,3);
+    c.fillStyle=col;
+    drawArrow(c,ex1,ey1, ux,uy, arrowLen, 3.5*s);
+    drawArrow(c,ex2,ey2, -ux,-uy, arrowLen, 3.5*s);
     // 测量点圆点
-    c.beginPath(); c.arc(ax,ay,4,0,Math.PI*2); c.fill();
-    c.beginPath(); c.arc(bx,by,4,0,Math.PI*2); c.fill();
-    // 尺寸文字（平行于尺寸线，位于中断处）
-    c.translate(mx,my);
-    c.rotate(Math.atan2(ddy,ddx));
-    c.textAlign='center';
-    c.textBaseline='middle';
-    c.fillStyle='#e11d48';
-    c.fillText(text,0,0);
+    c.fillStyle=col;
+    c.beginPath(); c.arc(ax,ay,4*s,0,Math.PI*2); c.fill();
+    c.beginPath(); c.arc(bx,by,4*s,0,Math.PI*2); c.fill();
+    if(tooShort){
+      // 过短：标注改到 b 端箭头直线后方一侧
+      c.translate(ex2+ux*(arrowLen+6*s), ey2+uy*(arrowLen+6*s));
+      c.rotate(Math.atan2(ddy,ddx));
+      c.textAlign='left';
+      c.textBaseline='middle';
+      c.fillStyle=col;
+      c.fillText(cmTxt, 0, 0);
+    }else{
+      // 标注位置：平行于双箭头实线，位于实线上方
+      c.translate(mx,my);
+      c.rotate(Math.atan2(ddy,ddx));
+      c.textAlign='center';
+      c.textBaseline='middle';
+      c.fillStyle=col;
+      c.fillText(cmTxt, 0, -12*s);
+    }
     c.restore();
   }
   function openRulerMenu(index,x,y){
@@ -1686,6 +1820,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     rulerDrag=null;
     closeRulerMenu();
     rulerHoverIndex=-1; rulerHoverPart=null;
+    scheduleAutoSave();
   }
   document.querySelectorAll('.ruler-popup button').forEach(b=>{
     b.addEventListener('click',e=>{
@@ -1835,8 +1970,10 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
         cancelRulerPlace();
         const r=rulers[hit.index];
         const g=evToGridF(e);
-        rulerDrag={index:hit.index, mode:hit.part==='line'?'translate':'endpoint',
-                   end:hit.part==='line'?null:hit.part,
+        const dMode=hit.part==='line'?'translate':(hit.part==='dim'?'dim':(hit.part==='lineA'||hit.part==='lineB')?hit.part:'endpoint');
+        rulerDrag={index:hit.index,
+                   mode:dMode,
+                   end:dMode==='endpoint'?hit.part:null,
                    origA:{gx:r.a.gx,gy:r.a.gy}, origB:{gx:r.b.gx,gy:r.b.gy},
                    start:{gx:g.gx,gy:g.gy}, px:e.clientX, py:e.clientY};
         canvas.setPointerCapture(e.pointerId);
@@ -1896,13 +2033,25 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     }
     if(rulerDrag){
       rulerHoverIndex=rulerDrag.index;
-      rulerHoverPart=rulerDrag.mode==='translate'?'line':rulerDrag.end;
+      rulerHoverPart=rulerDrag.mode==='translate'?'line':rulerDrag.mode==='dim'?'dim':(rulerDrag.mode==='lineA'||rulerDrag.mode==='lineB')?rulerDrag.mode:rulerDrag.end;
       const g=evToGridF(e);
       const dx=g.gx-rulerDrag.start.gx, dy=g.gy-rulerDrag.start.gy;
       const r=rulers[rulerDrag.index];
       if(rulerDrag.mode==='translate'){
         r.a={gx:clampAxis(Math.round(rulerDrag.origA.gx+dx),GRID_W), gy:clampAxis(Math.round(rulerDrag.origA.gy+dy),GRID_H)};
         r.b={gx:clampAxis(Math.round(rulerDrag.origB.gx+dx),GRID_W), gy:clampAxis(Math.round(rulerDrag.origB.gy+dy),GRID_H)};
+      }else if(rulerDrag.mode==='dim'){
+        // 拖动箭头尺寸线：取其到 a-b 连线的垂距作为新 off（平行分量不影响），改变两条尺寸界线长度
+        r.off=clampOff(signedOffset(r.a, r.b, g)/mag);
+      }else if(rulerDrag.mode==='lineA'||rulerDrag.mode==='lineB'){
+        // 拖动两端点所在的平行直线：沿 a-b 方向平移（垂直分量忽略），只改变标尺长度
+        const dux=rulerDrag.origB.gx-rulerDrag.origA.gx, duy=rulerDrag.origB.gy-rulerDrag.origA.gy;
+        const dl=Math.hypot(dux,duy)||1;
+        const ux=dux/dl, uy=duy/dl;
+        const proj=dx*ux+dy*uy;
+        const o=rulerDrag.mode==='lineA'?rulerDrag.origA:rulerDrag.origB;
+        const n={gx:clampAxis(Math.round(o.gx+ux*proj),GRID_W), gy:clampAxis(Math.round(o.gy+uy*proj),GRID_H)};
+        if(rulerDrag.mode==='lineA') r.a=n; else r.b=n;
       }else{
         const o=rulerDrag.end==='a'?rulerDrag.origA:rulerDrag.origB;
         const n={gx:clampAxis(Math.round(o.gx+dx),GRID_W), gy:clampAxis(Math.round(o.gy+dy),GRID_H)};
@@ -1923,7 +2072,21 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       if(ni!==rulerHoverIndex||np!==rulerHoverPart){
         rulerHoverIndex=ni;
         rulerHoverPart=np;
-        canvas.style.cursor=rulerHoverIndex>=0?'move':'';
+        if(rulerHoverIndex>=0&&rulerHoverPart==='dim'){
+          // 尺寸线可沿垂向拖动：按 a-b 连线的法向给出对应的 resize 光标
+          const r=rulers[rulerHoverIndex];
+          const ang=Math.atan2(r.b.gy-r.a.gy, r.b.gx-r.a.gx);
+          const nx=-Math.sin(ang), ny=Math.cos(ang);
+          canvas.style.cursor=Math.abs(nx)>Math.abs(ny)?'ew-resize':'ns-resize';
+        }else if(rulerHoverIndex>=0&&(rulerHoverPart==='lineA'||rulerHoverPart==='lineB')){
+          // 平行直线沿 a-b 方向平移：按该方向给出 resize 光标
+          const r=rulers[rulerHoverIndex];
+          const ang=Math.atan2(r.b.gy-r.a.gy, r.b.gx-r.a.gx);
+          const ux=Math.cos(ang), uy=Math.sin(ang);
+          canvas.style.cursor=Math.abs(ux)>Math.abs(uy)?'ew-resize':'ns-resize';
+        }else{
+          canvas.style.cursor=rulerHoverIndex>=0?'move':'';
+        }
         render();
       }
     }
@@ -1961,11 +2124,12 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       canvas.style.cursor=rulerHoverIndex>=0?'move':'';
       if(canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
       if(wasClick) openRulerMenu(index, e.clientX, e.clientY);
+      else scheduleAutoSave();
       return;
     }
     painting=false;
     if(strokeSnapshot){
-      if(!samePixels(strokeSnapshot.pixels,pixels)) pushUndo(strokeSnapshot);
+      if(!samePixels(strokeSnapshot.pixels,pixels)){ pushUndo(strokeSnapshot); markEdited(); }
       strokeSnapshot=null;
     }
     if(e.button===2) tool=prevTool;
@@ -2038,7 +2202,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       }else{
         floodFill(cx,cy);
       }
-      if(!samePixels(before.pixels,pixels)) pushUndo(before);
+      if(!samePixels(before.pixels,pixels)){ pushUndo(before); markEdited(); }
       painting=false;
     }
     requestRender();
@@ -2203,6 +2367,90 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     const data=rasterizeImage(img,GRID_W,GRID_H);
     if(data) pixels.set(data);
   }
+  // 从纯原图快照（含空边距）中提取图片区域，等比缩放到新画布并居中。
+  // 等价于直接用原图重新导入的效果（图片不失真）；无图片内容时保持空画布。
+  function rasterizeSnapshotToGrid(src,sw,sh){
+    if(!src||src.length!==sw*sh*4) return;
+    let minX=sw,minY=sh,maxX=-1,maxY=-1;
+    for(let y=0;y<sh;y++){
+      for(let x=0;x<sw;x++){
+        if(src[(y*sw+x)*4+3]>0){
+          if(x<minX)minX=x; if(x>maxX)maxX=x;
+          if(y<minY)minY=y; if(y>maxY)maxY=y;
+        }
+      }
+    }
+    if(maxX<minX||maxY<minY) return;
+    const bw=maxX-minX+1, bh=maxY-minY+1;
+    let dw=bw, dh=bh;
+    if(bw>GRID_W||bh>GRID_H){
+      const k=Math.min(GRID_W/bw, GRID_H/bh);
+      dw=Math.max(1,Math.round(bw*k));
+      dh=Math.max(1,Math.round(bh*k));
+    }
+    const ox=Math.floor((GRID_W-dw)/2), oy=Math.floor((GRID_H-dh)/2);
+    for(let y=0;y<dh;y++){
+      const sy=Math.min(bh-1,Math.floor(y*bh/dh));
+      for(let x=0;x<dw;x++){
+        const sx=Math.min(bw-1,Math.floor(x*bw/dw));
+        const si=((minY+sy)*sw+(minX+sx))*4;
+        const di=((oy+y)*GRID_W+(ox+x))*4;
+        pixels[di]=src[si];pixels[di+1]=src[si+1];pixels[di+2]=src[si+2];pixels[di+3]=src[si+3];
+      }
+    }
+  }
+  // 把 Image 元素按封顶分辨率读成原始像素 {w,h,px}。封顶 1024：网格上限 500，
+  // 任意 ≤1024 的目标网格下，封顶图与原始图栅格化结果一致（等比缩放仅缩小），故无损又省存储
+  function readImageRaw(img){
+    const sw=img.naturalWidth||img.width, sh=img.naturalHeight||img.height;
+    if(!sw||!sh) return null;
+    const CAP=1024;
+    let dw=sw, dh=sh;
+    if(sw>CAP||sh>CAP){
+      const k=Math.min(CAP/sw, CAP/sh);
+      dw=Math.max(1,Math.round(sw*k));
+      dh=Math.max(1,Math.round(sh*k));
+    }
+    const tmp=document.createElement('canvas');
+    tmp.width=dw; tmp.height=dh;
+    const tctx=tmp.getContext('2d');
+    tctx.imageSmoothingEnabled=false;
+    tctx.drawImage(img,0,0,dw,dh);
+    return {w:dw,h:dh,px:new Uint8ClampedArray(tctx.getImageData(0,0,dw,dh).data)};
+  }
+  // 从原始像素栅格化到 gw×gh 画布：等比缩放（仅缩小）、居中、纯白→空。
+  // 等价于直接用原图重导入的效果，供载回草稿后按原图重新缩放/匹配
+  function rasterizeRaw(px,sw,sh,gw,gh){
+    if(!px||px.length!==sw*sh*4) return null;
+    const out=new Uint8ClampedArray(gw*gh*4);
+    for(let i=0;i<gw*gh;i++){out[i*4]=255;out[i*4+1]=255;out[i*4+2]=255;out[i*4+3]=0;}
+    let dw=sw, dh=sh;
+    if(sw>gw||sh>gh){
+      const k=Math.min(gw/sw, gh/sh);
+      dw=Math.max(1,Math.round(sw*k));
+      dh=Math.max(1,Math.round(sh*k));
+    }
+    const ox=Math.floor((gw-dw)/2), oy=Math.floor((gh-dh)/2);
+    for(let y=0;y<dh;y++){
+      const sy=Math.min(sh-1,Math.floor(y*sh/dh));
+      for(let x=0;x<dw;x++){
+        const sx=Math.min(sw-1,Math.floor(x*sw/dw));
+        const si=(sy*sw+sx)*4;
+        const a=px[si+3]/255;
+        const r=Math.round(px[si]*a+255*(1-a));
+        const g=Math.round(px[si+1]*a+255*(1-a));
+        const b=Math.round(px[si+2]*a+255*(1-a));
+        if(r===255&&g===255&&b===255) continue;
+        const di=((oy+y)*gw+(ox+x))*4;
+        out[di]=r;out[di+1]=g;out[di+2]=b;out[di+3]=255;
+      }
+    }
+    return out;
+  }
+  function rasterizeRawToGrid(){
+    const d=rasterizeRaw(origImg.px,origImg.w,origImg.h,GRID_W,GRID_H);
+    if(d) pixels.set(d);
+  }
   async function importImage(file){
     try{
       const img=await loadImage(file);
@@ -2216,6 +2464,19 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
         scaled=true;
       }
       importedImg=img;
+      // 捕获原图原始像素并生成持久化用 PNG：缩放/匹配据此按原图重新栅格化
+      restoreImgToken++;   // 丢弃在途的草稿原图加载
+      const oi=readImageRaw(img);
+      origImg=oi||null;
+      importedImgDataURL=null;
+      if(oi){
+        try{
+          const tmp=document.createElement('canvas');
+          tmp.width=oi.w; tmp.height=oi.h;
+          tmp.getContext('2d').putImageData(new ImageData(oi.px,oi.w,oi.h),0,0);
+          importedImgDataURL=tmp.toDataURL('image/png');
+        }catch(e){ importedImgDataURL=null; }
+      }
       matchedPalette=null;
       matchedCard=null;
       cellCodeIdx.fill(NO_CODE);
@@ -2228,6 +2489,8 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       rasterizeImageToGrid(img);
       lastImported={data:snapshot(),w:GRID_W,h:GRID_H};
       pushUndo(before);
+      // 导入替换整幅画布：视为新画布，清除手动绘制标记（导入不算手动绘制）
+      userEdited=false;
       render();
       statusEl.textContent='已导入 '+w+'×'+h+' 图片，居中于 ('+ox+','+oy+')'+(scaled?'（原图过大，已等比缩放）':'');
     }catch(err){
@@ -2238,6 +2501,14 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   const matchPopup=document.getElementById('matchPopup');
   let lastImported=null;
   let importedImg=null;
+  // 导入原图的原始像素（自然/封顶分辨率）与其 PNG dataURL（持久化用）：
+  // Image 元素无法序列化，载回草稿后靠它们按原图重新栅格化，避免从已量化快照缩放失真
+  let origImg=null;
+  let importedImgDataURL=null;
+  let restoreImgToken=0;
+  // 手动绘制/编辑标记：仅用户手动绘制才触发尺寸锁定；导入、匹配色卡不算。
+  // 锁定态 = userEdited && 画布非空白（撤销回空白自动解锁）
+  let userEdited=false;
   function matchGrid(brand){
     const palette=buildMatchPalette(brand);
     const card=cardById(brand);
@@ -2252,7 +2523,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     // 刷新后无 Image 元素，回退到保存的导入原图快照。
     // 只对「原图有颜色 ∩ 画布当前该格也有颜色」的交集做匹配；空色块（画布为白）保持空白，
     // 这样切换子集时，被擦除/清空的格不会用原图重新补色回来。
-    const src=(importedImg?rasterizeImage(importedImg,GRID_W,GRID_H):
+    const src=(importedImg&&(importedImg.naturalWidth||importedImg.width)?rasterizeImage(importedImg,GRID_W,GRID_H):
                (lastImported&&lastImported.w===GRID_W&&lastImported.h===GRID_H?lastImported.data.pixels:pixels));
     const before=snapshot();
     let changed=0;
@@ -2416,6 +2687,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     showCodes=!showCodes;
     updateCodeBtn();
     render();
+    scheduleAutoSave();
   }
   codeBtn.addEventListener('click',toggleCodes);
   const fileInput=document.getElementById('fileInput');
@@ -2477,7 +2749,6 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     const cap=MAX_EXPORT/Math.max(rw,rh);
     // 整体导出保持与视图一致；局部导出取当前视图格子大小与大图分辨率中的较大者
     const cell=big ? Math.max(viewCell, cap) : Math.min(viewCell, cap);
-    const scaleFactor=cell/viewCell;
     const W=Math.round(rw*cell), H=Math.round(rh*cell);
     let out=document.createElement('canvas');
     out.width=W; out.height=H;
@@ -2551,7 +2822,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       }
     }
     for(const r of rulers){
-      drawDim(octx,r.a,r.b, (r.a.gx-gx0)*cell,(r.a.gy-gy0)*cell, (r.b.gx-gx0)*cell,(r.b.gy-gy0)*cell, r.off*scaleFactor, 1);
+      drawDim(octx,r.a,r.b, (r.a.gx-gx0)*cell,(r.a.gy-gy0)*cell, (r.b.gx-gx0)*cell,(r.b.gy-gy0)*cell, r.off, cell, 1);
     }
     // 色号清单：'append' 拼接到主图下方（单张图）；'sep' 主图下载后另下载单独清单
     if(legendMode==='append'){
@@ -2798,22 +3069,72 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   }
 
   // ---- 清空 ----
-  document.getElementById('clearBtn').addEventListener('click',()=>{
-    if(!confirm('是否清空画布？')) return;
+  function doClearCanvas(msg){
     const before=snapshot();
     fillWhite();
     importedImg=null;
     lastImported=null;
+    origImg=null;
+    importedImgDataURL=null;
+    restoreImgToken++;   // 丢弃在途的原图加载，清空后不再按原图重渲染
     clearRulers();
     matchedPalette=null;
     matchedCard=null;
     cellCodeIdx.fill(NO_CODE);
     showCodes=false;
     updateCodeBtn();
-    if(!samePixels(before.pixels,pixels)) pushUndo(before);
+    // 即使画面本就空白，清空仍可能删除原图信息，此时也要可撤销（上下文比较见 sameContext）
+    if(!samePixels(before.pixels,pixels)||!sameContext(before.ctx,contextState())) pushUndo(before);
     render();
-    statusEl.textContent='已清空';
+    statusEl.textContent=msg||'已清空';
+  }
+  document.getElementById('clearBtn').addEventListener('click',()=>{
+    if(!confirm('是否清空画布？')) return;
+    doClearCanvas();
   });
+
+  // ---- 清除作画痕迹：按原图信息在当前尺寸下重新渲染，覆盖手动画的痕迹 ----
+  // 看似“清除”，实为加法：用导入原图（当前尺寸 + 色卡匹配状态）重画覆盖；
+  // 视为重新渲染而非手动绘制，因此会重置 userEdited、解除尺寸锁定。
+  // 没有导入原图时，默认等同于「清空画布」（doClearCanvas）。
+  function clearTraces(){
+    const before=snapshot();
+    let handled=false;
+    if(importedImg&&(importedImg.naturalWidth||importedImg.width)){
+      const s=rasterizeImage(importedImg,GRID_W,GRID_H);
+      if(s){ pixels.set(s); handled=true; }
+    }else if(origImg&&origImg.px){
+      const s=rasterizeRaw(origImg.px,origImg.w,origImg.h,GRID_W,GRID_H);
+      if(s){ pixels.set(s); handled=true; }
+    }else if(lastImported&&lastImported.data&&lastImported.data.pixels){
+      // 老草稿无原图像素：从保存的网格快照重新栅格化（就地写入 pixels）
+      rasterizeSnapshotToGrid(lastImported.data.pixels,lastImported.w,lastImported.h);
+      handled=true;
+    }
+    if(!handled){
+      doClearCanvas('没有导入的原图，已清空画布');
+      return;
+    }
+    cellCodeIdx.fill(NO_CODE);
+    // 处于色卡匹配模式时，把重渲染的原图颜色吸附到当前匹配色卡（含编号）
+    if(matchedPalette&&matchedCard){
+      for(let y=0;y<GRID_H;y++){
+        for(let x=0;x<GRID_W;x++){
+          const i=(y*GRID_W+x)*4;
+          if(pixels[i+3]===0) continue;   // 原图该格无色，保持空白
+          setCell(x,y,pixels[i],pixels[i+1],pixels[i+2]);
+        }
+      }
+    }
+    // 视为重新渲染而非手动绘制：解除尺寸锁定
+    userEdited=false;
+    updateSizeLock();
+    // 解除尺寸锁定也属于上下文变化，像素没变时同样可撤销（见 sameContext）
+    if(!samePixels(before.pixels,pixels)||!sameContext(before.ctx,contextState())) pushUndo(before);
+    render();
+    statusEl.textContent='已清除作画痕迹，按原图重新渲染'+(matchedCard?'（匹配 '+matchedCard.name+'）':'');
+  }
+  document.getElementById('clearTracesBtn').addEventListener('click',clearTraces);
 
   // ---- 显示倍率（1×=完整视图，选择后以窗口中心为焦点）----
   const zoomSel=document.getElementById('zoom');
@@ -2838,6 +3159,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
 
   // ---- 快捷键：撤销 / 重做 ----
   document.addEventListener('keydown',e=>{
+    if(draftLibOpen) return;   // 草稿库打开时画布功能关闭
     const tag=(e.target.tagName||'').toLowerCase();
     if(tag==='input'||tag==='textarea'||tag==='select') return;
     const mod=e.ctrlKey||e.metaKey;
@@ -2854,7 +3176,28 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   const gridHInput=document.getElementById('gridH');
   const squareSlider=document.getElementById('squareSlider');
   const squareSliderVal=document.getElementById('squareSliderVal');
+  function isCanvasBlank(){
+    for(let i=3;i<pixels.length;i+=4) if(pixels[i]!==0) return false;
+    return true;
+  }
+  function sizeLocked(){ return userEdited && !isCanvasBlank(); }
+  function updateSizeLock(){
+    const locked=sizeLocked();
+    gridWInput.disabled=locked;
+    gridHInput.disabled=locked;
+    squareSlider.disabled=locked;
+    const btn=document.getElementById('applySizeBtn');
+    if(btn) btn.disabled=locked;
+    const hint=document.getElementById('sizeLockHint');
+    if(hint) hint.style.display=locked?'block':'none';
+  }
+  // 手动绘制/编辑产生实际改动时调用：置锁定标记并刷新锁定状态
+  function markEdited(){ userEdited=true; updateSizeLock(); }
   function resizeGridTo(w,h){
+    if(sizeLocked()){
+      statusEl.textContent='画板已手动修改，尺寸已锁定（撤销到空白可解除锁定）';
+      return;
+    }
     const ow=GRID_W, oh=GRID_H;
     const old=pixels.slice();
     GRID_W=w; GRID_H=h;
@@ -2862,8 +3205,21 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     syncUndoRedo();
     rebuildGrid();
     clearRulers();
-    if(importedImg){
+    if(importedImg&&(importedImg.naturalWidth||importedImg.width)){
       rasterizeImageToGrid(importedImg);
+      // 画布已按新尺寸重新栅格化原图，同步更新原图快照的尺寸与像素，
+      // 否则 lastImported 尺寸失配会让「原图色彩」失效、匹配回退到已量化的画布像素
+      lastImported={data:snapshot(),w:GRID_W,h:GRID_H};
+    }else if(origImg&&origImg.px){
+      // 草稿/刷新恢复场景：没有可用的 Image 元素，但有持久化的原图原始像素，
+      // 直接按原图重新栅格化，避免从已量化快照缩放造成细节/尺寸丢失
+      rasterizeRawToGrid();
+      lastImported={data:snapshot(),w:GRID_W,h:GRID_H};
+    }else if(lastImported&&lastImported.data&&lastImported.data.pixels){
+      // 老草稿（无原图像素）：退回用保存的原图快照等比重栅格化到新画布，
+      // 避免整幅最近邻缩放造成图片拉伸畸变
+      rasterizeSnapshotToGrid(lastImported.data.pixels,lastImported.w,lastImported.h);
+      lastImported={data:snapshot(),w:GRID_W,h:GRID_H};
     }else{
       for(let ny=0;ny<h;ny++){
         const sy=Math.min(oh-1,Math.floor(ny*oh/h));
@@ -2876,6 +3232,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       }
     }
     render();
+    scheduleAutoSave();
   }
   function applySquareSize(n){
     n=Math.max(1,Math.min(GRID_MAX,n));
@@ -3053,33 +3410,6 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     for(let i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i);
     return u8;
   }
-  function buildSave(withLast,withCodes){
-    const save={v:2,w:GRID_W,h:GRID_H,px:bytesToB64(new Uint8Array(pixels.buffer,pixels.byteOffset,pixels.byteLength))};
-    save.showCodes=!!showCodes;
-    save.card=matchedCard?matchedCard.id:null;
-    if(withCodes&&cellCodeIdx) save.codes=bytesToB64(new Uint8Array(cellCodeIdx.buffer,cellCodeIdx.byteOffset,cellCodeIdx.byteLength));
-    if(rulers.length) save.rulers=rulers.map(function(r){return {a:{gx:r.a.gx,gy:r.a.gy},b:{gx:r.b.gx,gy:r.b.gy},off:r.off};});
-    if(withLast&&lastImported&&lastImported.w===GRID_W&&lastImported.h===GRID_H&&lastImported.data&&lastImported.data.pixels){
-      save.lastImport={w:GRID_W,h:GRID_H,px:bytesToB64(new Uint8Array(lastImported.data.pixels.buffer,lastImported.data.pixels.byteOffset,lastImported.data.pixels.byteLength))};
-    }
-    return save;
-  }
-  function saveState(){
-    try{
-      localStorage.setItem(SAVE_KEY,JSON.stringify(buildSave(true,true)));
-      return true;
-    }catch(e){
-      try{
-        localStorage.setItem(SAVE_KEY,JSON.stringify(buildSave(false,true)));
-        return true;
-      }catch(e2){
-        try{
-          localStorage.setItem(SAVE_KEY,JSON.stringify(buildSave(false,false)));
-          return true;
-        }catch(e3){ return false; }
-      }
-    }
-  }
   function loadState(){
     let raw=null;
     try{ raw=localStorage.getItem(SAVE_KEY); }catch(e){ return false; }
@@ -3134,42 +3464,80 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     gridWInput.value=GRID_W; gridHInput.value=GRID_H;
     if(GRID_W===GRID_H){ squareSlider.value=GRID_W; squareSliderVal.textContent=GRID_W; }
     undoStack.length=0; redoStack.length=0; syncUndoRedo();
+    // 恢复存档视为新画布：清除手动绘制标记
+    userEdited=false;
     render();
-    statusEl.textContent='已恢复上次保存的内容（Ctrl+S 保存）';
+    statusEl.textContent='已恢复上次保存的画布';
     return true;
   }
   document.addEventListener('keydown',e=>{
     const mod=e.ctrlKey||e.metaKey;
     if(mod&&e.key.toLowerCase()==='s'){
       e.preventDefault();
-      if(saveState()) statusEl.textContent='已保存（Ctrl+S）';
-      else statusEl.textContent='保存失败：本地存储空间不足或不可用';
+      saveNow('已保存（Ctrl+S）');
     }
   });
 
   // ---- 画布草稿库 ----
-  const DRAFT_KEY='pixel_board_drafts_v1';
-  const DRAFT_MAX=10;
-  let drafts=Array(DRAFT_MAX).fill(null);
-  function loadDrafts(){
-    let arr=[];
-    try{ const raw=localStorage.getItem(DRAFT_KEY); if(raw) arr=JSON.parse(raw); }catch(e){}
-    if(!Array.isArray(arr)) arr=[];
-    drafts=Array(DRAFT_MAX).fill(null);
-    for(let i=0;i<DRAFT_MAX;i++) if(arr[i]&&arr[i].px) drafts[i]=arr[i];
+  const DRAFT_KEY_V2='pixel_board_drafts_v2';
+  const DRAFT_KEY_V1='pixel_board_drafts_v1';
+  let drafts=[];            // 草稿数组（对象），展示按 updatedAt 倒序
+  let currentDraftId=null;  // 当前画布对应的草稿 id（启动后恒有值）
+  let lastOpenId=null;
+  let dirty=false;          // 有未写回的改动
+  let autoSaveTimer=null;
+  const thumbCache={};      // 缩略图缓存（id → dataURL，不持久化）
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+  // 单调递增的“最近修改”时间戳：避免同一毫秒内多次创建/编辑导致画廊倒序不稳定
+  function nextStamp(){
+    const n=Date.now();
+    const mx=drafts.reduce((a,d)=>Math.max(a,d.updatedAt||0),0);
+    return n>mx?n:mx+1;
   }
-  function saveDrafts(){ try{ localStorage.setItem(DRAFT_KEY,JSON.stringify(drafts)); }catch(e){} }
-  function snapshotDraft(){
+  function fmtTime(ts){
+    const d=new Date(ts), p=n=>String(n).padStart(2,'0');
+    return (d.getMonth()+1)+'月'+d.getDate()+'日 '+p(d.getHours())+':'+p(d.getMinutes());
+  }
+  function autoName(){
+    const d=new Date(), p=n=>String(n).padStart(2,'0');
+    return '草稿 '+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+  }
+  function escHtml(s){
+    return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function findDraft(id){ return drafts.find(d=>d.id===id); }
+  function loadDraftsV2(){
+    drafts=[]; lastOpenId=null;
+    try{
+      const raw=localStorage.getItem(DRAFT_KEY_V2);
+      if(raw){
+        const data=JSON.parse(raw);
+        if(Array.isArray(data.drafts)) drafts=data.drafts.filter(d=>d&&d.id&&d.px);
+        if(typeof data.lastOpen==='string'&&drafts.some(d=>d.id===data.lastOpen)) lastOpenId=data.lastOpen;
+      }
+    }catch(e){ drafts=[]; }
+    if(drafts.length&&!lastOpenId) lastOpenId=drafts.reduce((a,b)=>a.updatedAt>=b.updatedAt?a:b).id;
+  }
+  function saveDraftsV2(){
+    try{
+      localStorage.setItem(DRAFT_KEY_V2,JSON.stringify({drafts:drafts,lastOpen:currentDraftId||lastOpenId}));
+      return true;
+    }catch(e){ return false; }
+  }
+  // 序列化当前画布的全部载荷（像素、色号、导入原图、匹配色卡、编号开关、标尺）
+  function serializeCurrent(){
     const d={
       w:GRID_W, h:GRID_H,
       px:bytesToB64(new Uint8Array(pixels.buffer,pixels.byteOffset,pixels.byteLength)),
       codes:cellCodeIdx?bytesToB64(new Uint8Array(cellCodeIdx.buffer,cellCodeIdx.byteOffset,cellCodeIdx.byteLength)):null
     };
-    // 每张草稿一并保存它自己导入的原图，避免切换画布后匹配色卡误用最后导入的图片
+    // 每张草稿一并保存它自己导入的原图快照，避免切换画布后匹配色卡误用最后导入的图片
     if(lastImported&&lastImported.data&&lastImported.data.pixels){
       d.lw=lastImported.w; d.lh=lastImported.h;
       d.lpx=bytesToB64(new Uint8Array(lastImported.data.pixels.buffer,lastImported.data.pixels.byteOffset,lastImported.data.pixels.byteLength));
     }
+    // 保存导入原图的高分辨率像素（PNG dataURL），载回草稿后据此按原图重新栅格化
+    if(importedImgDataURL) d.oimg=importedImgDataURL;
     // 保存当前画布的色卡匹配信息（记录匹配的是哪个色卡），载入草稿时一并还原
     if(matchedCard) d.card=matchedCard.id;
     d.showCodes=!!showCodes;
@@ -3190,15 +3558,29 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       const cu=b64ToBytes(d.codes);
       if(cu.length===GRID_W*GRID_H*2) cellCodeIdx=new Uint16Array(cu.buffer);
     }
-    // 载入草稿时恢复该画布自己导入的原图；并清掉上个画布残留的 Image 元素，
-    // 否则匹配色卡/调整尺寸会用错原图。老草稿（无 lpx）则原图置空。
+    // 载入草稿时恢复该画布自己导入的原图快照；并清掉上个画布残留的 Image/原图像素，
+    // 否则匹配色卡/调整尺寸会用错原图。老草稿（无 lpx）则快照置空。
     if(d.lpx&&d.lw&&d.lh){
       const lu=b64ToBytes(d.lpx);
       lastImported={w:d.lw,h:d.lh,data:{pixels:new Uint8ClampedArray(lu.buffer)}};
     }else{
       lastImported=null;
     }
-    importedImg=null;
+    importedImg=null; origImg=null; importedImgDataURL=null;
+    restoreImgToken++;   // 使任何在途的原图加载失效，避免误装到当前草稿
+    // 持久化的导入原图（PNG）：异步恢复 Image 元素与原始像素，
+    // 缩放/匹配据此走与实时导入完全相同的重栅格化（canvas 绘制），不依赖已量化快照
+    if(d.oimg){
+      importedImgDataURL=d.oimg;
+      const token=++restoreImgToken;
+      const im=new Image();
+      im.onload=function(){
+        if(token!==restoreImgToken) return;
+        importedImg=im;
+        origImg=readImageRaw(im)||null;
+      };
+      im.src=d.oimg;
+    }
     matchedPalette=null; matchedCard=null;
     // 载入草稿时还原保存的色卡匹配状态（记录的是哪个色卡）
     if(d.card){
@@ -3214,6 +3596,10 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     undoStack.length=0; redoStack.length=0; syncUndoRedo();
     gridWInput.value=GRID_W; gridHInput.value=GRID_H;
     if(GRID_W===GRID_H){ squareSlider.value=GRID_W; squareSliderVal.textContent=GRID_W; }
+    // 载入草稿一律回到完整视图，避免沿用旧缩放/平移导致画面被裁切错位（同尺寸草稿不会触发 rebuildGrid 复位视图）
+    mag=1; offX=0; offY=0;
+    // 载入草稿视为新画布：清除手动绘制标记，避免上个画布的锁定状态残留
+    userEdited=false;
     render();
   }
   function draftThumb(d){
@@ -3230,33 +3616,159 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     cx.drawImage(src,0,0,d.w,d.h,Math.round((tw-dw)/2),Math.round((th-dh)/2),dw,dh);
     return c.toDataURL('image/png');
   }
-  function renderDraftLib(){
-    const filled=drafts.filter(Boolean).length;
-    document.getElementById('draftLibCount').textContent='画布草稿库（'+filled+'/10）';
-    const html=[];
-    for(let i=0;i<DRAFT_MAX;i++){
-      if(drafts[i]){
-        html.push('<div class="draft-slot filled" data-idx="'+i+'">'
-          +'<img class="draft-thumb" src="'+draftThumb(drafts[i])+'">'
-          +'<span class="draft-info">'+drafts[i].w+'×'+drafts[i].h+'</span>'
-          +'<button class="draft-del" title="删除草稿">✕</button></div>');
-      }else{
-        html.push('<div class="draft-slot" data-idx="'+i+'"><span class="draft-add">＋<br>存入当前画布</span></div>');
-      }
-    }
-    document.getElementById('draftLibGrid').innerHTML=html.join('');
+  function getThumb(d){
+    if(thumbCache[d.id]) return thumbCache[d.id];
+    const t=draftThumb(d); thumbCache[d.id]=t; return t;
   }
+  // ---- 自动保存：编辑后防抖写回当前草稿 ----
+  function scheduleAutoSave(){
+    if(!currentDraftId) return;
+    dirty=true;
+    if(autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer=setTimeout(()=>{ autoSaveTimer=null; flushAutoSave(); },700);
+  }
+  function flushAutoSave(){
+    if(autoSaveTimer){ clearTimeout(autoSaveTimer); autoSaveTimer=null; }
+    if(!dirty||!currentDraftId) return;
+    const d=findDraft(currentDraftId);
+    if(!d) return;
+    dirty=false;
+    const p=serializeCurrent();
+    d.w=p.w; d.h=p.h; d.px=p.px; d.codes=p.codes;
+    d.lw=p.lw; d.lh=p.lh; d.lpx=p.lpx; d.card=p.card;
+    d.oimg=p.oimg;
+    d.showCodes=p.showCodes; d.rulers=p.rulers;
+    d.updatedAt=nextStamp();
+    delete thumbCache[d.id];
+    if(!saveDraftsV2()){
+      dirty=true;
+      if(statusEl) statusEl.textContent='保存失败：本地存储空间不足，请删除部分草稿';
+    }
+  }
+  // ---- 画廊操作 ----
+  function openDraft(id){
+    const d=findDraft(id);
+    if(!d) return;
+    flushAutoSave();
+    applyDraft(d);
+    currentDraftId=id; lastOpenId=id;
+    setDraftLib(false);
+    if(statusEl) statusEl.textContent='已打开草稿「'+d.name+'」';
+  }
+  function newCanvas(){
+    flushAutoSave();
+    const w=GRID_W, h=GRID_H;
+    const draft={id:uid(), name:autoName(), createdAt:Date.now(), updatedAt:nextStamp(),
+      w:w, h:h, px:bytesToB64(new Uint8ClampedArray(w*h*4)), showCodes:false, rulers:[]};
+    drafts.push(draft);
+    applyDraft(draft);
+    currentDraftId=draft.id; lastOpenId=draft.id;
+    saveDraftsV2();
+    setDraftLib(false);
+    if(statusEl) statusEl.textContent='已新建画布「'+draft.name+'」';
+  }
+  function deleteDraft(id){
+    if(id===currentDraftId){
+      if(statusEl) statusEl.textContent='当前画布正在编辑，请先打开其他草稿';
+      return;
+    }
+    const d=findDraft(id);
+    if(!d) return;
+    if(!confirm('删除草稿「'+d.name+'」？此操作不可恢复。')) return;
+    drafts=drafts.filter(x=>x.id!==id);
+    delete thumbCache[id];
+    if(lastOpenId===id) lastOpenId=null;
+    saveDraftsV2();
+    renderDraftLib();
+    if(statusEl) statusEl.textContent='已删除草稿「'+d.name+'」';
+  }
+  function renameDraft(id,name){
+    const d=findDraft(id);
+    if(!d) return;
+    name=(name||'').trim();
+    if(!name||name===d.name) return;
+    d.name=name;
+    saveDraftsV2();
+    renderDraftLib();
+  }
+  function duplicateDraft(id){
+    const src=findDraft(id);
+    if(!src) return;
+    const copy=JSON.parse(JSON.stringify(src));
+    copy.id=uid(); copy.name=src.name+' 副本';
+    copy.createdAt=Date.now(); copy.updatedAt=nextStamp();
+    drafts.push(copy);
+    saveDraftsV2();
+    renderDraftLib();
+    if(statusEl) statusEl.textContent='已复制草稿「'+copy.name+'」';
+  }
+  function renderDraftLib(){
+    draftLibCount.textContent='画布草稿库（'+drafts.length+'）';
+    if(!drafts.length){
+      draftLibGrid.innerHTML='<div class="draft-empty">还没有草稿。<br>绘制内容会自动保存；也可点上方「＋ 新建画布」。</div>';
+      return;
+    }
+    const sorted=[...drafts].sort((a,b)=>b.updatedAt-a.updatedAt);
+    const html=[];
+    for(let i=0;i<sorted.length;i++){
+      const d=sorted[i], cur=d.id===currentDraftId;
+      html.push('<div class="draft-card'+(cur?' current':'')+'" data-id="'+d.id+'">'
+        +'<div class="draft-thumb-box"><img class="draft-thumb" src="'+getThumb(d)+'" alt=""></div>'
+        +(cur?'<span class="draft-current-tag">当前</span>':'')
+        +'<div class="draft-name" title="'+escHtml(d.name)+'">'+escHtml(d.name)+'</div>'
+        +'<div class="draft-meta">'+d.w+'×'+d.h+' · '+fmtTime(d.updatedAt)+'</div>'
+        +'<div class="draft-ops">'
+        +'<button data-act="rename" title="重命名">✎</button>'
+        +'<button data-act="dup" title="复制">⧉</button>'
+        +'<button data-act="del" title="删除">✕</button>'
+        +'</div></div>');
+    }
+    draftLibGrid.innerHTML=html.join('');
+  }
+  function startRename(card,id){
+    const d=findDraft(id);
+    const nameEl=card.querySelector('.draft-name');
+    if(!nameEl) return;
+    const input=document.createElement('input');
+    input.type='text'; input.maxLength=30;
+    input.value=d?d.name:'';
+    input.className='draft-name-input';
+    nameEl.replaceWith(input);
+    input.focus(); input.select();
+    let done=false;
+    const finish=save=>{
+      if(done) return; done=true;
+      if(save) renameDraft(id,input.value); else renderDraftLib();
+    };
+    input.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){ e.preventDefault(); finish(true); }
+      else if(e.key==='Escape'){ e.preventDefault(); finish(false); }
+    });
+    input.addEventListener('blur',()=>finish(true));
+  }
+  // ---- 保存当前画布（等同 Ctrl+S）----
+  function saveNow(msg){
+    flushAutoSave();
+    if(!dirty) statusEl.textContent=msg||'已保存';
+  }
+  document.getElementById('saveDraftBtn').addEventListener('click',()=>saveNow());
   const draftLibBtn=document.getElementById('draftLibBtn');
   const draftBackBtn=document.getElementById('draftBackBtn');
+  const draftNewBtn=document.getElementById('draftNewBtn');
   const draftLib=document.getElementById('draftLib');
+  const draftLibGrid=document.getElementById('draftLibGrid');
+  const draftLibCount=document.getElementById('draftLibCount');
   const matchPopupEl=document.getElementById('matchPopup');
   let draftLibOpen=false;
   let matchPopupPrev='none';
   function setDraftLib(open){
     draftLibOpen=open;
     if(open){
+      flushAutoSave();
       matchPopupPrev=matchPopupEl.style.display;
       closeRulerMenu(); closeExportPopup(); renderDraftLib();
+      // 打开草稿库时关闭画布视图：复位为完整视图，返回画布时不残留缩放/平移
+      mag=1; offX=0; offY=0;
     }
     document.querySelector('.canvas-wrap').style.display=open?'none':'flex';
     document.querySelector('.corner-stack').style.display=open?'none':'flex';
@@ -3264,28 +3776,80 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     matchPopupEl.style.display=open?'none':matchPopupPrev;
     draftLib.style.display=open?'flex':'none';
     draftLibBtn.classList.toggle('active',open);
+    // 关闭草稿库、画布重新显示时重新适配画布：载入草稿期间 wrap 是 display:none，
+    // resizeCanvas 会因 clientWidth=0 被跳过，画布仍按旧尺寸渲染（内容裁切/错位）。
+    if(!open) resizeCanvas();
   }
   draftLibBtn.addEventListener('click',()=>setDraftLib(!draftLibOpen));
   draftBackBtn.addEventListener('click',()=>setDraftLib(false));
-  document.getElementById('draftLibGrid').addEventListener('click',e=>{
-    const slot=e.target.closest('.draft-slot');
-    if(!slot) return;
-    const i=+slot.dataset.idx;
-    if(e.target.closest('.draft-del')){
-      drafts[i]=null; saveDrafts(); renderDraftLib();
-      statusEl.textContent='已删除草稿';
+  draftNewBtn.addEventListener('click',()=>newCanvas());
+  draftLibGrid.addEventListener('click',e=>{
+    if(e.target.closest('.draft-name-input')) return;  // 正在改名，忽略点击
+    const card=e.target.closest('.draft-card');
+    if(!card) return;
+    const id=card.getAttribute('data-id');
+    const actBtn=e.target.closest('[data-act]');
+    if(actBtn){
+      const act=actBtn.getAttribute('data-act');
+      if(act==='del') deleteDraft(id);
+      else if(act==='dup') duplicateDraft(id);
+      else if(act==='rename') startRename(card,id);
       return;
     }
-    if(drafts[i]){
-      applyDraft(drafts[i]);
-      setDraftLib(false);
-      statusEl.textContent='已载入草稿：'+drafts[i].w+'×'+drafts[i].h;
-    }else{
-      drafts[i]=snapshotDraft(); saveDrafts(); renderDraftLib();
-      statusEl.textContent='已存入草稿槽位 '+(i+1);
-    }
+    openDraft(id);
   });
-  loadDrafts();
+  // 初始化 / 迁移：v2 → v1 槽位 → 上次 Ctrl+S 画布 → 全新空白草稿
+  function initDraftsV2(){
+    loadDraftsV2();
+    if(drafts.length){
+      const target=findDraft(lastOpenId)||[...drafts].sort((a,b)=>b.updatedAt-a.updatedAt)[0];
+      applyDraft(target);
+      currentDraftId=target.id; lastOpenId=target.id;
+      if(statusEl) statusEl.textContent='已打开草稿「'+target.name+'」';
+      return;
+    }
+    let migrated=0;
+    try{
+      const raw=localStorage.getItem(DRAFT_KEY_V1);
+      if(raw){
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          for(let i=0;i<arr.length;i++){
+            if(arr[i]&&arr[i].px){
+              drafts.push({id:uid(), name:'草稿 '+(i+1), createdAt:Date.now(), updatedAt:nextStamp(),
+                w:arr[i].w, h:arr[i].h, px:arr[i].px, codes:arr[i].codes, lw:arr[i].lw, lh:arr[i].lh, lpx:arr[i].lpx,
+                card:arr[i].card, showCodes:!!arr[i].showCodes,
+                rulers:Array.isArray(arr[i].rulers)?arr[i].rulers:undefined});
+              migrated++;
+            }
+          }
+        }
+      }
+    }catch(e){}
+    if(!migrated && localStorage.getItem(SAVE_KEY)){
+      if(loadState()){
+        const p=serializeCurrent();
+        drafts.push({id:uid(), name:'草稿 1', createdAt:Date.now(), updatedAt:nextStamp(),
+          w:p.w, h:p.h, px:p.px, codes:p.codes, lw:p.lw, lh:p.lh, lpx:p.lpx,
+          card:p.card, showCodes:p.showCodes, rulers:p.rulers});
+        migrated++;
+      }
+    }
+    if(migrated){
+      const target=[...drafts].sort((a,b)=>b.updatedAt-a.updatedAt)[0];
+      applyDraft(target);
+      currentDraftId=target.id; lastOpenId=target.id;
+      saveDraftsV2();
+      if(statusEl) statusEl.textContent='已迁移 '+migrated+' 张草稿，打开「'+target.name+'」';
+      return;
+    }
+    // 全新用户：建初始空白草稿，直接作为当前画布
+    const blank={id:uid(), name:'草稿 1', createdAt:Date.now(), updatedAt:nextStamp(),
+      w:GRID_W, h:GRID_H, px:bytesToB64(new Uint8ClampedArray(GRID_W*GRID_H*4)), showCodes:false, rulers:[]};
+    drafts.push(blank);
+    currentDraftId=blank.id; lastOpenId=blank.id;
+    saveDraftsV2();
+  }
 
   // ---- 初始化：直接生成默认 200×200 画布 ----
   GRID_W=200; GRID_H=200;
@@ -3299,10 +3863,10 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   statusEl.textContent='画布已生成：200×200';
   setCurColor('#000000');
   loadImportedCards();
-  loadState();
+  initDraftsV2();
   window.addEventListener('resize',resizeCanvas);
-  window.addEventListener('beforeunload',()=>saveState());
-  window.addEventListener('pagehide',()=>saveState());
+  window.addEventListener('beforeunload',()=>flushAutoSave());
+  window.addEventListener('pagehide',()=>flushAutoSave());
 })();
 </script>
 </body>
