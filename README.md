@@ -5,26 +5,23 @@
 ## 功能特性
 
 - **像素绘制**：左键绘制 / 右键擦除，支持导入图片，Ctrl+滚轮缩放，Ctrl+Z / Ctrl+Y 撤销重做
+- **对称轴镜像**：左右 / 上下 / 双轴 / 斜向对称，画笔 / 橡皮镜像绘制，可配合套索选区
 - **色卡匹配**：马卡龙 / COCO 内置色卡，支持导入自定义色卡（.txt）；匹配后颜色自动吸附到最近色号
 - **标注编号**：匹配后每个格子带色号编号，方便对照购买拼豆
 - **色号清单导出**：导出图片时可附带色号清单（色块 + 编号 + 用量），可单独下载或拼接到主图下方
 - **框选导出局部**：两次点击确定对角顶点，框选区域导出
 - **深色 / 浅色模式**：右上角一键切换
-- **像素空间自定义**：最大 500×500
+- **像素空间自定义**：最大 500×500，含超小号 12 / 小号 52 / 中号 78 / 大号 104 / 特大号 120 尺寸预设
 
 ## 安装包下载
 
-> 每个版本在 [Releases](https://github.com/Flashzzz42/pixel-board/releases) 发布，按系统 / 芯片架构分类。
+> 每个版本在 [Releases](https://github.com/Flashzzz42/pixel-board/releases) 发布。当前为 Tauri 2 打包，仅支持 **Windows 11**（x64），安装包 ~1.1MB，使用系统 WebView2，不内置浏览器引擎。
 
 | 系统 | 架构 | 安装包 | 说明 |
 | --- | --- | --- | --- |
-| Windows | x64 | `pixel-board-Setup-1.0.0-win-x64.exe` | NSIS 安装程序 |
-| macOS | Apple Silicon（M1–M5） | `pixel-board-1.0.0-mac-arm64.dmg` | 原生运行，无需转译 |
-| macOS | Intel | `pixel-board-1.0.0-mac-x64.dmg` | x64 |
+| Windows 11 | x64 | `pixel-board-1.2.0-win-x64-setup.exe` | NSIS 安装程序 |
 
-> 每个 mac 版本另有同名 `.zip`（解压即用），在 [Release v1.0.0](https://github.com/Flashzzz42/pixel-board/releases/tag/v1.0.0) 资产中。
-
-> macOS 安装包未签名（无 Apple 开发者证书），首次打开会提示「无法验证开发者」：右键 App → **打开**，或 系统设置 → 隐私与安全性 → **仍要打开**。
+> macOS 版自 v1.1.0 起停止发布。
 
 ## 本地使用
 
@@ -33,5 +30,5 @@
 ## 技术说明
 
 - 核心是一个自包含的 `index.html`（HTML + CSS + JS 全部内联），无任何外部依赖。
-- 桌面版由 Electron 封装（Windows / macOS 通用），打包工程与工作流见私有模板仓库 `electron-packaging-template`。
+- 桌面版由 Tauri 2 封装（Windows 11，系统 WebView2），安装包仅 ~1.1MB。
 - 色卡数据：`coco-colors.txt` / `mard-colors.txt`（可经应用内「导入色卡」加载）。
