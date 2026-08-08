@@ -159,10 +159,19 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
   content:'';width:4px;height:16px;background:#2563eb;border-radius:2px;flex:none;
 }
 .bead-code-toggle{
-  margin-left:auto;font-size:12px;color:#2563eb;background:#eff4ff;
+  font-size:12px;color:#2563eb;background:#eff4ff;
   border:1px solid #dbe3f8;border-radius:5px;padding:3px 8px;cursor:pointer;flex:none;
 }
 .bead-code-toggle:hover{background:#e0eaff}
+.bead-subset-select{
+  margin-left:auto;font-size:12px;color:#333;background:#fff;
+  border:1px solid #d0d0d0;border-radius:5px;padding:3px 6px;cursor:pointer;flex:none;max-width:140px;
+}
+.bead-close{
+  font-size:14px;color:#888;background:none;border:none;border-radius:5px;
+  padding:2px 7px;cursor:pointer;flex:none;line-height:1;
+}
+.bead-close:hover{background:#fde8e8;color:#c0392b}
 .bead-panel-body.hide-codes .bead-code{display:none}
 .bead-panel-body{flex:1;min-height:0;overflow-y:auto;padding:12px;font-size:14px;color:#666}
 .bead-brand-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
@@ -208,7 +217,10 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .bead-color-cell{display:flex;flex-direction:column;align-items:center;gap:2px}
 .bead-color{width:100%;aspect-ratio:1;border-radius:4px;cursor:pointer;border:1px solid rgba(0,0,0,.15);padding:0}
 .bead-color:hover{transform:scale(1.15);border-color:#2563eb;position:relative;z-index:2}
+.bead-color.disabled{filter:grayscale(1);opacity:.5;cursor:not-allowed}
+.bead-color.disabled:hover{transform:none;border-color:rgba(0,0,0,.15);position:static;z-index:auto}
 .bead-code{font-size:14px;color:#666;line-height:1;user-select:none}
+.bead-code.disabled{color:#c0c0c0}
 .bead-empty{color:#aaa;text-align:center;margin:24px 0}
 .picker-row{display:flex;align-items:center;gap:8px}
 #colorInput{width:44px;height:34px;padding:0;border:1px solid #ccc;border-radius:6px;background:none;cursor:pointer;flex:none}
@@ -216,6 +228,7 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
   flex:1;font-family:Consolas,monospace;font-size:16px;padding:6px 8px;
   border:1px solid #ccc;border-radius:6px;min-width:0;
 }
+#colorConfirm{flex:none;height:34px;padding:0 12px;border-radius:6px;cursor:pointer;font-size:15px}
 .actions{display:flex;flex-direction:column;gap:6px}
 .actions button{padding:9px 0;border-radius:6px;cursor:pointer;font-size:16px}
 .btn-primary{background:#2563eb;color:#fff;border:1px solid #2563eb}
@@ -248,6 +261,8 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .size-row{display:flex;gap:8px}
 .size-row label{display:flex;align-items:center;gap:4px;font-size:16px;color:#444;flex:1}
 .size-row input{flex:1;min-width:0;padding:5px;border:1px solid #ccc;border-radius:6px;font-size:16px}
+.preset-row{display:flex;gap:6px;margin-top:8px}
+.preset-row .btn-plain{flex:1;padding:5px 2px;font-size:12px;line-height:1.25;text-align:center}
 .select-row{display:none;gap:8px;margin-top:10px}
 .select-row.show{display:flex}
 .select-row .btn-plain{flex:1;padding:7px 4px;font-size:14px;text-align:center;transition:transform .08s ease, background-color .15s ease}
@@ -269,12 +284,22 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .export-empty-btn{padding:3px 10px;font-size:13px;border:1px solid #d0d0d0;border-radius:5px;
   background:#fff;color:#444;cursor:pointer;flex:none}
 .export-empty-btn.active{background:#dbe7ff;border-color:#a7c4ff;color:#1a4bd4;font-weight:600}
+.export-stats{font-size:12px;color:#888;padding:6px 10px;border-top:1px solid #f0f0f0;line-height:1.5}
 .slider-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:15px;color:#444}
 .slider-label{flex:none}
 .slider-row input[type=range]{flex:1;min-width:0}
 .slider-row span{min-width:38px;text-align:right;font-family:Consolas,monospace;font-size:15px;color:#333}
 .size-lock-hint{margin:8px 0 0;font-size:13px;color:#d97706;line-height:1.5}
 body.dark .size-lock-hint{color:#f0b45c}
+.sym-row{display:none;flex-wrap:wrap;gap:4px;margin-top:10px}
+.sym-row.show{display:flex}
+.sym-row button{flex:1 1 30%;padding:6px 0;font-size:13px;border:1px solid #d0d0d0;border-radius:5px;
+  background:#fff;color:#444;cursor:pointer;text-align:center}
+.sym-row button:hover{background:#f2f5ff}
+.sym-row button.active{background:#dbe7ff;border-color:#a7c4ff;color:#1a4bd4;font-weight:600}
+body.dark .sym-row button{background:#2a2b36;border-color:#44465a;color:#fff}
+body.dark .sym-row button.active{background:#3a3f5c;border-color:#6d7cff;color:#bcd0ff}
+.sym-row button.sym-reset{flex:1 1 100%;margin-top:2px}
 .tips{font-size:15px;color:#666;line-height:1.8}
 .tips p{margin:8px 0 0}
 .tips p.tips-h{margin:12px 0 3px;font-weight:600;color:#333;font-size:14px}
@@ -348,6 +373,7 @@ body.dark .export-empty-btn{color:#fff}
 body.dark .export-inline button:hover{background:#2e2f3a}
 body.dark .export-empty-btn:hover{background:#2e2f3a}
 body.dark .export-empty-btn.active{background:#2b3a5c;border-color:#4a6db5;color:#9db8f0}
+body.dark .export-stats{color:#9a9dad}
 body.dark .draft-card{background:#23242d;border-color:#3a3b47}
 body.dark .draft-card.current{border-color:#4a6db5}
 body.dark .draft-thumb-box{background:#2a2b35}
@@ -361,6 +387,10 @@ body.dark .tips summary{color:#cdd0dd;border-bottom-color:#3a3b47}
 body.dark .bead-panel-body{color:#b6b9c8}
 body.dark .bead-title:hover,body.dark .bead-title.active{background:#1f2b45}
 body.dark .bead-code{color:#b6b9c8}
+body.dark .bead-subset-select{background:#23242d;border-color:#4a4b58;color:#e3e4ea}
+body.dark .bead-code.disabled{color:#5a5c66}
+body.dark .bead-close{color:#9a9dad}
+body.dark .bead-close:hover{background:#3a2430;color:#e88080}
 body.dark .bead-series-title{color:#b6b9c8;border-bottom-color:#3a3b47}
 body.dark .history .h-swatch{background:#2a2b35}
 </style>
@@ -378,10 +408,17 @@ body.dark .history .h-swatch{background:#2a2b35}
         <label>宽 <input type="number" id="gridW" min="1" max="500" value="400"></label>
         <label>高 <input type="number" id="gridH" min="1" max="500" value="400"></label>
       </div>
+      <div class="preset-row">
+        <button class="btn-plain size-preset" data-size="12" title="超小号 12×12">超小号<br>12</button>
+        <button class="btn-plain size-preset" data-size="52" title="小号 52×52">小号<br>52</button>
+        <button class="btn-plain size-preset" data-size="78" title="中号 78×78">中号<br>78</button>
+        <button class="btn-plain size-preset" data-size="104" title="大号 104×104">大号<br>104</button>
+        <button class="btn-plain size-preset" data-size="120" title="特大号 120×120">特大号<br>120</button>
+      </div>
       <div class="actions">
         <button class="btn-plain" id="applySizeBtn">应用尺寸</button>
       </div>
-      <p class="size-lock-hint" id="sizeLockHint" style="display:none">🔒 已手动绘制，尺寸已锁定（撤销到空白可解除锁定）</p>
+      <p class="size-lock-hint" id="sizeLockHint" style="display:none">🔒 已绘制内容，尺寸已锁定（撤销到空白可解除锁定）</p>
       <div class="slider-row">
         <span class="slider-label">正方形</span>
         <input type="range" id="squareSlider" min="1" max="500" value="200">
@@ -394,13 +431,14 @@ body.dark .history .h-swatch{background:#2a2b35}
         <button class="btn-primary" id="importBtn"><span class="import-main">📁 导入图片</span><span class="import-sub">（可拖拽图片导入）</span></button>
         <button class="btn-plain" id="exportBtn">⬇ 导出 PNG</button>
         <div class="export-inline" id="exportPopup" style="display:none">
-          <button data-export-action="full">⬜ 导出整个画幅</button>
-          <button data-export-action="region">▭ 框选导出局部</button>
+          <button data-export-action="full">⬜ 全画幅导出</button>
+          <button data-export-action="region">▭ 局部画幅导出</button>
           <button data-export-action="legend" id="legendBtn">🏷 色号清单</button>
           <div class="export-empty-row">
             <span class="export-empty-label">空色块</span>
             <button data-empty-export="white" class="export-empty-btn active">白色</button>
             <button data-empty-export="transparent" class="export-empty-btn">透明</button>
+            <button data-empty-export="green" class="export-empty-btn">绿色</button>
           </div>
           <div class="export-empty-row">
             <span class="export-empty-label">色号清单</span>
@@ -408,6 +446,7 @@ body.dark .history .h-swatch{background:#2a2b35}
             <button data-legend-export="sep" class="export-empty-btn">单独</button>
             <button data-legend-export="append" class="export-empty-btn">拼接</button>
           </div>
+          <div class="export-stats" id="exportStats"></div>
         </div>
         <button class="btn-plain" id="clearBtn">🗑 清空画布</button>
         <button class="btn-plain" id="clearTracesBtn">🧽 清除作画痕迹</button>
@@ -435,19 +474,21 @@ body.dark .history .h-swatch{background:#2a2b35}
     <details class="tips">
       <summary>说明</summary>
       <p class="tips-h">绘制</p>
-      <p>· 左键 / 拖动：用当前颜色绘制<br>· 右键 / 拖动：擦除为空白（空色块与白色珠在数据上有区分，导出时可选表示方式）<br>· 取色：点击画面吸取颜色<br>· 填充：填充同色连通区域</p>
+      <p>· 左键 / 拖动：用当前颜色绘制<br>· 右键 / 拖动：擦除为空白（空色块与白色珠在数据上有区分，导出时可选表示方式）<br>· 取色：点击画面吸取颜色<br>· 填充：填充同色连通区域<br>· 对称轴：工具行「〰 对称轴」点击开启并默认「左右」，下方展开选项行（左右 / 上下 / 双轴 / 45°斜 / 135°斜 / 双斜）切换类型、「↺ 复位轴线」把轴回到中央，再点「〰 对称轴」关闭整个功能（关闭后轴复位到中央）；左右 / 上下 / 双轴可编辑模式下拖动红色轴线调整位置（吸附到方格线或格中），斜向轴过画布中心（仅正方形画布），画笔 / 橡皮按轴线镜像到对侧，可配合套索选区使用（套索选区与其镜像求并集，跨轴线两侧同时选中）；取色 / 填充 / 标尺 / 同色选择点击时自动关闭对称轴</p>
       <p class="tips-h">选区</p>
       <p>· 套索：在画布上拖动画出任意形状的选区；「反选」选中选区之外的像素，「清除选区」取消选择<br>· 存在选区时：🪣 填充只作用于选区内的像素；「删除选区内容」将选区内的像素恢复为空白</p>
       <p class="tips-h">标尺</p>
       <p>· 每格边长对应现实中 2.6mm。前两次点击确定测量两点并生成实线，第三次点击确认生成带箭头的尺寸线与数值；按 Esc 取消本次标注<br>· 拖动线段平移整条标注，拖动端点移动单个端点；点击线段可「删除线段」；鼠标移到标注线上显示两测量点半圆虚线，移到测量点上显示完整虚线圆</p>
       <p class="tips-h">导入 / 导出</p>
-      <p>· 导入图片：点击「📁 导入图片」选择文件，或直接把图片拖入窗口（松开即导入）；图片自动缩放到不超过当前画布尺寸并居中<br>· 导出 PNG：可导出整个画幅，或「框选导出局部」后单击画布两次分别确定两个对角顶点（第 2 次点击后出现「✔ 确定导出」，拖动顶点 / 边线调整、选区内拖动平移），点击「✔ 确定导出」按该区域高清导出，Esc 取消；空色块可选「白色 / 透明」，透明时仅色块周围保留辅助线<br>· 色号清单：匹配色卡并标注编号后，「导出 PNG」可选色号清单「关 / 单独 / 拼接」——单独时另存一张清单图，拼接时清单直接附在主图下方（留 48px 间隔）；清单与主图同宽、横排多列（每行至多 15 个色块），显示色块、编号与用量，范围与导出的主图一致</p>
-      <p class="tips-h">匹配色卡</p>
-      <p>· 点击画布右上角「🎨 匹配色卡」并选择色卡，把「原图有颜色且画布当前也有颜色」的交集匹配为该色卡中最接近的颜色，空白区域保持空白<br>· 匹配后「🏷 标注编号」解锁：在每个像素方块中心显示对应色卡编号（如 A1），放大后更清晰<br>· 画布右上角「🔳 隐藏边框」可显示或隐藏像素格黑色边框</p>
+      <p>· 导入图片：点击「📁 导入图片」选择文件，或直接把图片拖入窗口（松开即导入）；图片自动缩放到不超过当前画布尺寸并居中<br>· 导出 PNG：可「全画幅导出」——分辨率随画幅增大而增大（上限 8192px，画幅越大编号越清晰），或「局部画幅导出」后单击画布两次分别确定两个对角顶点（第 2 次点击后出现「✔ 确定导出」，拖动顶点 / 边线调整、选区内拖动平移），点击「✔ 确定导出」按该区域高清导出，Esc 取消；空色块可选「白色 / 绿色 / 透明」，透明时仅色块周围保留辅助线<br>· 色号清单：匹配色卡并标注编号后，「导出 PNG」可选色号清单「关 / 单独 / 拼接」——单独时另存一张清单图，拼接时清单直接附在主图下方（留 48px 间隔）；清单与主图同宽、横排多列（每行至多 15 个色块），显示色块、编号与用量，范围与导出的主图一致；导出弹层内会按当前画布与清单预估导出尺寸与文件大小</p>
+      <p class="tips-h">匹配色卡 / 拼豆色卡</p>
+      <p>· 点击画布右上角「🎨 匹配色卡」并选择色卡，把「原图有颜色且画布当前也有颜色」的交集匹配为该色卡中最接近的颜色，空白区域保持空白<br>· 匹配后「🏷 标注编号」解锁：在每个像素方块中心显示对应色卡编号（如 A1），放大后更清晰<br>· 画布右上角「🔳 隐藏边框」可显示或隐藏像素格黑色边框<br>· 左侧「🧮 拼豆色卡」展开列表，点击 MARD / COCO 色卡或导入的色卡弹出大色卡；色卡头部下拉可按匹配色卡的子集（24 / 48 / 72…色、全色）筛选，所选子集之外的颜色置灰、不可选中（含下方编号），便于对照；右上角「✕」可收起色卡窗口</p>
       <p class="tips-h">尺寸</p>
-      <p>· 像素空间尺寸可自定义（最大 500×500）；修改时：已导入图片则从原图按新尺寸重新绘制居中，否则最近邻放大 / 缩小现有内容</p>
+      <p>· 像素空间尺寸可自定义（最大 500×500）；修改时：已导入图片则从原图按新尺寸重新绘制居中，否则最近邻放大 / 缩小现有内容<br>· 画布已有绘制内容时会锁定尺寸（含没有导入原图、仅有作画痕迹的草稿），避免误触拉伸畸变；撤销到空白或点「🧽 清除作画痕迹」可解除锁定</p>
+      <p class="tips-h">草稿库</p>
+      <p>· 画布修改会自动保存到当前草稿，也可点「💾 保存作画」或 Ctrl+S 立即保存<br>· 「🗂 画布草稿库」打开画廊：可「＋ 新建画布」，对草稿重命名 / 复制 / 删除，点击卡片切换画布，修改自动写回对应草稿<br>· 载入没有导入原图、仅含作画痕迹的草稿时尺寸会自动锁定，防止误触拉伸畸变；「🧽 清除作画痕迹」可按导入原图重新渲染覆盖手绘痕迹（无原图时等同清空画布），同时解除锁定</p>
       <p class="tips-h">视图与快捷键</p>
-      <p>· 缩放：画布内 Ctrl+滚轮 放大 / 缩小，1× 为完整视图<br>· 平移：放大后按住空格键拖动，或按住鼠标中键拖动；也可直接用滚轮<br>· 快捷键：Ctrl+Z 撤销 · Ctrl+Y 重做</p>
+      <p>· 缩放：画布内 Ctrl+滚轮 放大 / 缩小，1× 为完整视图<br>· 平移：放大后按住空格键拖动，或按住鼠标中键拖动；也可直接用滚轮<br>· 快捷键：Ctrl+Z 撤销 · Ctrl+Y 重做<br>· 顶栏最右「🌙 深色」按钮切换浅色 / 深色模式</p>
     </details>
   </div>
   <div class="canvas-area">
@@ -478,7 +519,9 @@ body.dark .history .h-swatch{background:#2a2b35}
   <div class="bead-panel" id="beadPanel" style="display:none">
     <div class="bead-panel-head">
       <span id="beadPanelHead">拼豆色卡</span>
+      <select class="bead-subset-select" id="beadSubsetSelect" title="按匹配色卡子集筛选：不在所选子集内的颜色置灰、不可选中"></select>
       <button class="bead-code-toggle" id="beadCodeToggle">隐藏编号</button>
+      <button class="bead-close" id="beadCloseBtn" title="收起">✕</button>
     </div>
     <div class="bead-panel-body" id="beadPanelBody">
       <p class="bead-empty">内容待定</p>
@@ -493,6 +536,7 @@ body.dark .history .h-swatch{background:#2a2b35}
         <button data-tool="picker">💧 取色</button>
         <button data-tool="fill">🪣 填充</button>
         <button data-tool="lasso">🔖 套索</button>
+        <button data-tool="sym">〰 对称轴</button>
         <button data-tool="selcolor">🧲 同色选择</button>
         <button data-tool="ruler">📏 标尺</button>
       </div>
@@ -500,6 +544,15 @@ body.dark .history .h-swatch{background:#2a2b35}
         <button class="btn-plain" id="invertSelBtn">↔ 反选</button>
         <button class="btn-plain" id="clearSelBtn">✖ 清除选区</button>
         <button class="btn-plain" id="deleteSelBtn">✂ 删除选区内容</button>
+      </div>
+      <div class="sym-row" id="symRow">
+        <button class="active" data-sym="v">↔ 左右</button>
+        <button data-sym="h">↕ 上下</button>
+        <button data-sym="vh">✳ 双轴</button>
+        <button data-sym="d45">45°斜</button>
+        <button data-sym="d135">135°斜</button>
+        <button data-sym="dx">✕ 双斜</button>
+        <button class="sym-reset" data-sym-reset>↺ 复位轴线</button>
       </div>
     </section>
     <section>
@@ -511,6 +564,7 @@ body.dark .history .h-swatch{background:#2a2b35}
       <div class="picker-row">
         <input type="color" id="colorInput" value="#000000">
         <input type="text" id="hexText" value="#000000" spellcheck="false">
+        <button class="btn-primary" id="colorConfirm">确定</button>
       </div>
     </section>
     <section>
@@ -974,6 +1028,28 @@ body.dark .history .h-swatch{background:#2a2b35}
       ctx.stroke();
       ctx.setLineDash([]);
     }
+    if(symmetry!=='off'){
+      ctx.lineWidth=tool==='sym'?2.5:1.5;          // 编辑模式下加粗提示可拖动
+      ctx.strokeStyle='rgba(220,60,60,0.9)';
+      ctx.setLineDash([6,4]);
+      if(symmetry==='v'||symmetry==='vh'){
+        const ax=o.ox+symX*gs.w/GRID_W;
+        ctx.beginPath(); ctx.moveTo(ax,o.oy); ctx.lineTo(ax,o.oy+gs.h); ctx.stroke();
+      }
+      if(symmetry==='h'||symmetry==='vh'){
+        const ay=o.oy+symY*gs.h/GRID_H;
+        ctx.beginPath(); ctx.moveTo(o.ox,ay); ctx.lineTo(o.ox+gs.w,ay); ctx.stroke();
+      }
+      if(symmetry==='d45'||symmetry==='dx'){         // 45° 主对角线（过画布中心，固定不拖动）
+        ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.moveTo(o.ox,o.oy); ctx.lineTo(o.ox+gs.w,o.oy+gs.h); ctx.stroke();
+      }
+      if(symmetry==='d135'||symmetry==='dx'){        // 135° 反对角线
+        ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.moveTo(o.ox+gs.w,o.oy); ctx.lineTo(o.ox,o.oy+gs.h); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
     updateCodeCount();
     updateSizeLock();
   }
@@ -1002,19 +1078,28 @@ body.dark .history .h-swatch{background:#2a2b35}
       customSwatch.classList.toggle('active', hex.toLowerCase()===customHex.toLowerCase());
     }
   }
+  // 从调色盘/历史取色/拼豆色卡选色：设色并记录，有选区时替换选区；
+  // 橡皮状态下选色后自动切回画笔（先填色再切换，避免清掉刚用的选区）
+  function pickColor(hex){
+    setCurColor(hex);
+    addHistory(hex);
+    fillSelectionColor(hex);
+    if(tool==='eraser') setTool('pen');
+  }
   colorInput.addEventListener('input',()=>{
-    setCurColor(colorInput.value);
-    addHistory(colorInput.value);
+    setCurColor(colorInput.value);   // 拖动取色只实时预览，不写入历史
   });
   hexText.addEventListener('change',()=>{
     const v=hexText.value.trim();
     if(/^#?[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(v)){
       const hex=v.startsWith('#')?v:'#'+v;
-      setCurColor(hex);
-      addHistory(hex);
+      setCurColor(hex);              // 手动输入也只预览，点「确定」才写入历史
     }else{
       setCurColor(curColor);
     }
+  });
+  document.getElementById('colorConfirm').addEventListener('click',()=>{
+    pickColor(curColor);   // 确认：写入历史 + 有选区则替换 + 橡皮状态切回画笔
   });
 
   // ---- 历史取色记录（最多 12 个，新色在最前） ----
@@ -1038,9 +1123,7 @@ body.dark .history .h-swatch{background:#2a2b35}
         el.style.background=history[k];
         el.title=history[k];
         el.addEventListener('click',()=>{
-          setCurColor(history[k]);
-          addHistory(history[k]);
-          fillSelectionColor(history[k]);
+          pickColor(history[k]);
         });
       }
       historyEl.appendChild(el);
@@ -1111,7 +1194,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     el.dataset.color=hex;
     el.style.background=hex;
     el.title=hex;
-    el.addEventListener('click',()=>{ setCurColor(hex); addHistory(hex); fillSelectionColor(hex); });
+    el.addEventListener('click',()=>{ pickColor(hex); });
     paletteEl.appendChild(el);
   });
   customSwatch=document.createElement('button');
@@ -1124,7 +1207,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   const beadPanel=document.getElementById('beadPanel');
   const beadPanelBody=document.getElementById('beadPanelBody');
   const MARD_SERIES=['A','B','C','D','E','F','G','H','M','P','Q','R','Y','ZG'];
-  function renderBeadChart(colors, allowed){
+  function renderBeadChart(colors, allowed, enabledSet){
     const groups={};
     const order=[];
     for(const [code,hex] of colors){
@@ -1139,17 +1222,19 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       const list=groups[series];
       html+='<div class="bead-series collapsed"><div class="bead-series-title">'+series+' 系列（'+list.length+'）</div><div class="bead-series-grid">';
       for(const [code,hex] of list){
-        html+='<div class="bead-color-cell"><button class="bead-color" data-hex="'+hex+'" title="'+code+' '+hex+'" style="background:'+hex+'"></button><span class="bead-code">'+code+'</span></div>';
+        // 子集筛选：不在选中子集内的颜色灰色置灰、不可选中（含下方标注的序号）
+        const dis=enabledSet&&!enabledSet.has(code);
+        html+='<div class="bead-color-cell"><button class="bead-color'+(dis?' disabled':'')+'" data-hex="'+hex+'" title="'+code+' '+hex+'" style="background:'+hex+'"></button><span class="bead-code'+(dis?' disabled':'')+'">'+code+'</span></div>';
       }
       html+='</div></div>';
     }
     return html;
   }
-  function beadContentHTML(brand){
-    if(brand==='mard') return renderBeadChart(MARD_COLORS, MARD_SERIES);
-    if(brand==='coco') return renderBeadChart(COCO_COLORS);
+  function beadContentHTML(brand, enabledSet){
+    if(brand==='mard') return renderBeadChart(MARD_COLORS, MARD_SERIES, enabledSet);
+    if(brand==='coco') return renderBeadChart(COCO_COLORS, null, enabledSet);
     const ci=importedCardIndex(brand);
-    if(ci>=0) return renderBeadChart(importedCards[ci].colors);
+    if(ci>=0) return renderBeadChart(importedCards[ci].colors, null, enabledSet);
     return '<p class="bead-empty">该色卡数据待补充</p>';
   }
   let activeBrand=null;
@@ -1161,35 +1246,50 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     });
     beadPanel.style.display='flex';
     document.getElementById('beadPanelHead').textContent=beadBrandName(brand);
-    beadPanelBody.innerHTML=beadContentHTML(brand);
-    beadPanelBody.querySelectorAll('.bead-color').forEach(el=>{
-      el.addEventListener('click',()=>{
-        setCurColor(el.dataset.hex);
-        addHistory(el.dataset.hex);
-        fillSelectionColor(el.dataset.hex);
+    // 子集下拉：对应「匹配色卡」中的各色卡子集；不在所选子集内的颜色灰色置灰、不可选中
+    const sel=document.getElementById('beadSubsetSelect');
+    const card=cardById(brand);
+    let opts='<option value="">全色</option>';
+    if(card&&card.subsets) opts+=card.subsets.map(function(s){return '<option value="'+s.id+'">'+s.name+'</option>';}).join('');
+    sel.innerHTML=opts;
+    sel.value='';
+    const renderBody=()=>{
+      let enabledSet=null;
+      if(sel.value){
+        const s=cardById(sel.value);
+        if(s&&s.colors) enabledSet=new Set(s.colors.map(function(c){return c[0];}));
+      }
+      beadPanelBody.innerHTML=beadContentHTML(brand, enabledSet);
+      beadPanelBody.querySelectorAll('.bead-color').forEach(el=>{
+        if(el.classList.contains('disabled')) return;   // 子集外颜色不可选中
+        el.addEventListener('click',()=>{
+          pickColor(el.dataset.hex);
+        });
       });
-    });
-    const updateOverview=()=>{
+      const updateOverview=()=>{
+        const ov=beadPanelBody.querySelector('.bead-overview');
+        if(!ov) return;
+        const allCollapsed=[].every.call(beadPanelBody.querySelectorAll('.bead-series'), el=>el.classList.contains('collapsed'));
+        ov.textContent=allCollapsed?'▸ 全部展开':'▾ 全部收起';
+      };
+      beadPanelBody.querySelectorAll('.bead-series-title').forEach(t=>{
+        t.addEventListener('click',()=>{
+          t.parentElement.classList.toggle('collapsed');
+          updateOverview();
+        });
+      });
       const ov=beadPanelBody.querySelector('.bead-overview');
-      if(!ov) return;
-      const allCollapsed=[].every.call(beadPanelBody.querySelectorAll('.bead-series'), el=>el.classList.contains('collapsed'));
-      ov.textContent=allCollapsed?'▸ 全部展开':'▾ 全部收起';
+      if(ov){
+        ov.addEventListener('click',()=>{
+          const series=beadPanelBody.querySelectorAll('.bead-series');
+          const allCollapsed=[].every.call(series, el=>el.classList.contains('collapsed'));
+          series.forEach(el=>el.classList.toggle('collapsed', !allCollapsed));
+          updateOverview();
+        });
+      }
     };
-    beadPanelBody.querySelectorAll('.bead-series-title').forEach(t=>{
-      t.addEventListener('click',()=>{
-        t.parentElement.classList.toggle('collapsed');
-        updateOverview();
-      });
-    });
-    const ov=beadPanelBody.querySelector('.bead-overview');
-    if(ov){
-      ov.addEventListener('click',()=>{
-        const series=beadPanelBody.querySelectorAll('.bead-series');
-        const allCollapsed=[].every.call(series, el=>el.classList.contains('collapsed'));
-        series.forEach(el=>el.classList.toggle('collapsed', !allCollapsed));
-        updateOverview();
-      });
-    }
+    sel.onchange=renderBody;
+    renderBody();
   }
   function hideBeadPanel(){
     activeBrand=null;
@@ -1208,6 +1308,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     beadPanelBody.classList.toggle('hide-codes');
     beadCodeToggle.textContent=beadPanelBody.classList.contains('hide-codes')?'显示编号':'隐藏编号';
   });
+  document.getElementById('beadCloseBtn').addEventListener('click',hideBeadPanel);
 
   // ---- 导入色卡（txt：每行「编号,#RRGGBB」）----
   function importedCardIndex(id){
@@ -1348,8 +1449,12 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   // ---- 工具 ----
   let tool='pen';
   let selColorMode=false;   // 同色选择模式（可与套索组合：点击套索后套索与同色同时高亮）
+  // 对称轴：'off' 关 / 'v' 左右垂直 / 'h' 上下水平 / 'vh' 双轴 / 'd45' 'd135' 'dx' 斜向（持久模式，可与套索选区组合使用；点按钮开启默认左右，再点关闭）
+  let symmetry='off';
+  let symX=GRID_W/2, symY=GRID_H/2;   // 轴线位置（网格单位，整数=格线，半整数=格中）
+  let symDragging=null;               // 拖动中的轴线：'v' | 'h' | null
   function updateToolHighlight(){
-    document.querySelectorAll('.tools button').forEach(b=>b.classList.toggle('active', b.dataset.tool===tool||(selColorMode&&b.dataset.tool==='selcolor')));
+    document.querySelectorAll('.tools button').forEach(b=>b.classList.toggle('active', b.dataset.tool===tool||(selColorMode&&b.dataset.tool==='selcolor')||(symmetry!=='off'&&b.dataset.tool==='sym')));
   }
   function setTool(t){
     let hadPending=false;
@@ -1363,17 +1468,30 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     if(t!=='lasso' && t!=='selcolor') selColorMode=false;
     tool=t;
     updateToolHighlight();
-    document.getElementById('selectRow').classList.toggle('show', t==='lasso'||t==='selcolor');
+    // 套索选项行仅在套索工具下展开；同色选择单独选中时不展开（需配合套索才进组合）
+    document.getElementById('selectRow').classList.toggle('show', t==='lasso');
+    // 对称轴选项行：像套索的选区行一样，仅编辑模式下展开
+    // 对称轴模式开启期间选项行保持展开（可配合套索/画笔切换选项），关闭时收起
+    symRowEl.classList.toggle('show', symmetry!=='off');
     if(hadPending) render();
+  }
+  // 关闭对称轴：置 off + 复位轴线到中央 + 收起选项行 + 刷新高亮
+  function closeSymmetry(){
+    symmetry='off';
+    symX=GRID_W/2; symY=GRID_H/2;
+    symRowEl.classList.toggle('show',false);
+    updateToolHighlight();
   }
   document.querySelectorAll('.tools button').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const t=btn.dataset.tool;
+      // 取色/填充/标尺/同色选择与对称轴没必要组合：点击直接取消对称轴再切换（并复位轴线）
+      if((t==='picker'||t==='fill'||t==='ruler'||t==='selcolor')&&symmetry!=='off') closeSymmetry();
       // 同色选择：切换模式；再次点击则取消同色（及同色+套索组合）状态，恢复常态
       if(t==='selcolor'){
         if(selColorMode){
           selColorMode=false;
-          tool='pen';
+          tool='none';
           clearSelection();
           updateToolHighlight();
           document.getElementById('selectRow').classList.toggle('show', false);
@@ -1384,6 +1502,27 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
         }
         return;
       }
+      // 对称轴：开关式。当前关 → 点按钮开启并默认「左右」；当前开 → 再点关闭整个功能（无「关」选项）
+      if(t==='sym'){
+        if(symmetry!=='off'){
+          tool='none';
+          closeSymmetry();
+          // 对称轴+套索组合下关闭对称轴：一并清除套索选区并收起套索选项行
+          if(selectionMask) clearSelection();
+          document.getElementById('selectRow').classList.toggle('show', false);
+          render();
+          statusEl.textContent='已关闭对称轴';
+          return;
+        }
+        symmetry='v';
+        tool='sym';
+        updateToolHighlight();
+        document.querySelectorAll('#symRow button').forEach(x=>x.classList.toggle('active', x.dataset.sym===symmetry));
+        symRowEl.classList.toggle('show',true);
+        render();
+        statusEl.textContent='对称轴：左右（镜像生效，可拖动画布上轴线调整）';
+        return;
+      }
       // 同色模式下的套索：有同色选中才进入组合模式；
       // 组合模式下再点套索则取消套索，只保留同色选中状态
       if(t==='lasso'){
@@ -1391,7 +1530,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
           if(tool==='lasso'){
             tool='selcolor';
             updateToolHighlight();
-            document.getElementById('selectRow').classList.toggle('show', true);
+            document.getElementById('selectRow').classList.toggle('show', false);
             statusEl.textContent='已退出套索，保留同色选择';
           }else if(!(selectionMask && countSel()>0)){
             // 同色模式但未选中画布颜色：取消同色模式，直接切到套索
@@ -1401,6 +1540,10 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
             // 有同色选中：进入同色+套索组合
             setTool('lasso');
           }
+        }else if(tool==='lasso'){
+          // 单独套索：再次点击取消选中
+          setTool('none');
+          statusEl.textContent='已取消选择';
         }else{
           setTool('lasso');
         }
@@ -1423,6 +1566,12 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
         drawSelectionOverlay();
         render();
         statusEl.textContent='已擦除选中颜色并退出同色选择';
+        return;
+      }
+      // 已选中的工具再次点击：解除选中（进入无工具状态）
+      if(t===tool){
+        setTool('none');
+        statusEl.textContent='已取消选择';
         return;
       }
       setTool(t);
@@ -1528,6 +1677,17 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       for(let x=0;x<GRID_W;x++){
         if(pointInPoly(x+0.5,y+0.5,pts)) lassoRegion[y*GRID_W+x]=1;
       }
+    }
+    // 对称轴开启：选区与其镜像求并集（套索跨轴线 → 两侧同时选中）
+    if(symmetry!=='off'){
+      const sym=new Uint8Array(GRID_W*GRID_H);
+      for(let i=0;i<lassoRegion.length;i++){
+        if(lassoRegion[i]){
+          const x=i%GRID_W, y=Math.floor(i/GRID_W);
+          for(const c of symCells(x,y)) sym[c[1]*GRID_W+c[0]]=1;
+        }
+      }
+      lassoRegion.set(sym);
     }
     if(hasPrior && !priorFromLasso){
       // 之前的选区来自同色选择：保留同色与套索区域的交集
@@ -1649,6 +1809,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   let rulerHoverIndex=-1;     // 鼠标悬停的标尺索引
   let rulerHoverPart=null;    // 悬停部位：'line' | 'a' | 'b' | null
   const rulerPopupEl=document.getElementById('rulerPopup');
+  const symRowEl=document.getElementById('symRow');
   function signedOffset(a,b,m){
     const o=gridOffsets(), gs=gridSize();
     const ax=o.ox+a.gx*gs.w/GRID_W, ay=o.oy+a.gy*gs.h/GRID_H;
@@ -1690,6 +1851,8 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     return {gx:x, gy:y};
   }
   function clampAxis(v,max){ return Math.min(max,Math.max(0,v)); }
+  // 对称轴吸附：0.5 网格步进（整数=格线，半整数=格中），并钳制在板内 [0.5, max-0.5]
+  function snapAxis(v,max){ return Math.min(max-0.5,Math.max(0.5,Math.round(v*2)/2)); }
   function distToSeg(px,py,x1,y1,x2,y2){
     const dx=x2-x1, dy=y2-y1;
     const len2=dx*dx+dy*dy;
@@ -1833,6 +1996,29 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       }
     });
   });
+  document.querySelectorAll('#symRow button').forEach(b=>{
+    b.addEventListener('click',e=>{
+      e.stopPropagation();
+      // 复位轴线按钮：轴回到中央，保持当前对称模式
+      if(b.dataset.symReset!==undefined){
+        symX=GRID_W/2; symY=GRID_H/2;
+        render();
+        statusEl.textContent='对称轴：'+({v:'左右',h:'上下',vh:'双轴',d45:'45°斜向',d135:'135°斜向',dx:'双斜向'}[symmetry])+'（轴线已复位到中央）';
+        return;
+      }
+      const m=b.dataset.sym;
+      // 斜向对称轴仅支持正方形画布：非正方形时提示并拒绝切换
+      if((m==='d45'||m==='d135'||m==='dx')&&GRID_W!==GRID_H){
+        statusEl.textContent='斜向对称轴仅支持正方形画布（当前 '+GRID_W+'×'+GRID_H+'）';
+        return;
+      }
+      symmetry=m;
+      document.querySelectorAll('#symRow button').forEach(x=>x.classList.toggle('active',x===b));
+      updateToolHighlight();
+      render();
+      statusEl.textContent='对称轴：'+({v:'左右',h:'上下',vh:'双轴',d45:'45°斜向',d135:'135°斜向',dx:'双斜向'}[symmetry])+'（画笔 / 橡皮镜像）';
+    });
+  });
   document.addEventListener('click',e=>{
     if(rulerPopupEl.style.display==='none'&&exportPopupEl.style.display==='none') return;
     if(rulerPopupEl.contains(e.target)||exportPopupEl.contains(e.target)||e.target===canvas) return;
@@ -1847,6 +2033,26 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       if(exportRectMode) cancelExportRect();
     }
   });
+
+  // 对称轴命中检测：指针距轴线 ≤10px（画布像素）判定命中，命中的轴 'v'|'h'|null
+  function hitSymAxis(e){
+    const rect=canvas.getBoundingClientRect();
+    const px=(e.clientX-rect.left)*(canvas.width/rect.width);
+    const py=(e.clientY-rect.top)*(canvas.height/rect.height);
+    const o=gridOffsets(), gs=gridSize();
+    let best=null, bestD=10;
+    if(symmetry==='v'||symmetry==='vh'){
+      const ax=o.ox+symX*gs.w/GRID_W;
+      const d=Math.abs(px-ax);
+      if(d<=bestD){ best='v'; bestD=d; }
+    }
+    if(symmetry==='h'||symmetry==='vh'){
+      const ay=o.oy+symY*gs.h/GRID_H;
+      const d=Math.abs(py-ay);
+      if(d<=bestD) best='h';
+    }
+    return best;
+  }
 
   // ---- 鼠标 / 触控交互 ----
   let painting=false;
@@ -1997,6 +2203,12 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       render();
       return;
     }
+    if(tool==='sym'&&e.button===0){
+      const axis=hitSymAxis(e);
+      if(axis){ symDragging=axis; canvas.setPointerCapture(e.pointerId); canvas.style.cursor='grabbing'; }
+      return;
+    }
+    if(tool==='none') return;
     if(e.button===2){ prevTool=tool; tool='eraser'; }
     painting=true;
     canvas.setPointerCapture(e.pointerId);
@@ -2057,6 +2269,13 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
         const n={gx:clampAxis(Math.round(o.gx+dx),GRID_W), gy:clampAxis(Math.round(o.gy+dy),GRID_H)};
         if(rulerDrag.end==='a') r.a=n; else r.b=n;
       }
+      render();
+      return;
+    }
+    if(symDragging){
+      const g=evToGridF(e);
+      if(symDragging==='v') symX=snapAxis(g.gx, GRID_W);
+      else symY=snapAxis(g.gy, GRID_H);
       render();
       return;
     }
@@ -2127,6 +2346,12 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       else scheduleAutoSave();
       return;
     }
+    if(symDragging){
+      symDragging=null;
+      canvas.style.cursor='default';
+      if(canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+      return;
+    }
     painting=false;
     if(strokeSnapshot){
       if(!samePixels(strokeSnapshot.pixels,pixels)){ pushUndo(strokeSnapshot); markEdited(); }
@@ -2161,7 +2386,41 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     if((e.ctrlKey||e.metaKey)&&['+','=','_','-','0'].indexOf(e.key)!==-1) e.preventDefault();
   });
 
+  function symCells(x,y){
+    const cs=[[x,y]];
+    const mx=Math.round(2*symX), my=Math.round(2*symY);   // 轴在 0.5 网格上 → 2*轴位置为整数
+    if(symmetry==='v'||symmetry==='vh'){
+      const m=mx-x-1; if(m>=0&&m<GRID_W) cs.push([m,y]);
+    }
+    if(symmetry==='h'||symmetry==='vh'){
+      const n=my-y-1; if(n>=0&&n<GRID_H) cs.push([x,n]);
+    }
+    if(symmetry==='vh'){
+      const m=mx-x-1, n=my-y-1;
+      if(m>=0&&m<GRID_W&&n>=0&&n<GRID_H) cs.push([m,n]);
+    }
+    // 斜向（过画布中心）：45° 主对角线 (x,y)→(y,x)；135° 反对角线 (x,y)→(W-1-y,H-1-x)；非正方形时 UI 已禁止切换
+    if(symmetry==='d45'||symmetry==='dx'){
+      const m=y+(GRID_W-GRID_H)/2, n=x+(GRID_H-GRID_W)/2;
+      if(m>=0&&m<GRID_W&&n>=0&&n<GRID_H) cs.push([m,n]);
+    }
+    if(symmetry==='d135'||symmetry==='dx'){
+      const m=(GRID_W+GRID_H)/2-y-1, n=(GRID_W+GRID_H)/2-x-1;
+      if(m>=0&&m<GRID_W&&n>=0&&n<GRID_H) cs.push([m,n]);
+    }
+    // 双斜 = 45° + 135° 反射的复合 → 绕中心 180° 旋转，补上第 4 点，与双轴四象限一致
+    if(symmetry==='dx'){
+      const m=GRID_W-1-x, n=GRID_H-1-y;
+      if(m>=0&&m<GRID_W&&n>=0&&n<GRID_H) cs.push([m,n]);
+    }
+    return cs;
+  }
+  function paintMirrored(x,y,fn){
+    const cs=symCells(x,y);
+    for(let k=0;k<cs.length;k++){ const m=cs[k]; fn(m[0],m[1]); }
+  }
   function apply(e){
+    if(tool==='none') return;
     const cell=evToCell(e);
     if(!cell){ statusEl.textContent='超出像素空间'; return; }
     const cx=cell[0], cy=cell[1];
@@ -2170,20 +2429,20 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       const c=parseHex(curColor);
       if(selectionMask && countSel()>0){
         for(let i=0;i<selectionMask.length;i++){
-          if(selectionMask[i]) setCell(i%GRID_W, Math.floor(i/GRID_W), c.r,c.g,c.b);
+          if(selectionMask[i]) paintMirrored(i%GRID_W, Math.floor(i/GRID_W), (X,Y)=>setCell(X,Y,c.r,c.g,c.b));
         }
         painting=false;
       }else{
-        setCell(cx,cy,c.r,c.g,c.b);
+        paintMirrored(cx,cy,(X,Y)=>setCell(X,Y,c.r,c.g,c.b));
       }
     }else if(tool==='eraser'){
       if(selectionMask && countSel()>0){
         for(let i=0;i<selectionMask.length;i++){
-          if(selectionMask[i]) setCell(i%GRID_W, Math.floor(i/GRID_W), 255,255,255,true);
+          if(selectionMask[i]) paintMirrored(i%GRID_W, Math.floor(i/GRID_W), (X,Y)=>setCell(X,Y,255,255,255,true));
         }
         painting=false;
       }else{
-        setCell(cx,cy,255,255,255,true);
+        paintMirrored(cx,cy,(X,Y)=>setCell(X,Y,255,255,255,true));
       }
     }else if(tool==='picker'){
       const c=getCell(cx,cy);
@@ -2545,6 +2804,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     refreshMatchActive();
     updateCodeBtn();
     statusEl.textContent='已匹配至 '+card.name+'（编号标注已解锁）· 匹配模式：后续绘制颜色将自动吸附该子集';
+    updateExportStats();   // 色号数据变化后刷新导出预计尺寸（含清单大小）
   }
   function renderMatchPopup(){
     let html='';
@@ -2740,23 +3000,27 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
 
   // ---- 导出 PNG ----
   // 导出与画布视图一致：方格辅助线 / 色卡标注编号 / 标尺 均按当前设置绘制，不额外询问
-  // 支持导出整个画幅，或框选矩形导出局部大图
-  const MAX_EXPORT=4096;
+  // 支持全画幅导出，或框选矩形局部画幅导出大图
+  const MAX_EXPORT=8192;   // 导出每边分辨率上限（越大编号越清晰，但文件/内存越大）
+  const MIN_CELL=16;       // 全画幅导出最小格子尺寸：大画幅在默认视图也能看到编号（分辨率随画幅增大而增大）
+  const LEGEND_RATIO=0.03; // 清单色块边长占导出图片宽度的比例（与格子大小无关，清单始终醒目）
+  const LEGEND_MAX_W=2048; // 清单画布最大宽度：超过则按比例降低分辨率（清单只占画幅固定比例，无需过高清晰度），拼接/下载时再放大
   function exportRegion(gx0,gy0,gx1,gy1, big){
     const rw=gx1-gx0+1, rh=gy1-gy0+1;
     const gs=gridSize();
     const viewCell=gs.w/GRID_W;
     const cap=MAX_EXPORT/Math.max(rw,rh);
-    // 整体导出保持与视图一致；局部导出取当前视图格子大小与大图分辨率中的较大者
-    const cell=big ? Math.max(viewCell, cap) : Math.min(viewCell, cap);
+    // 整体导出：分辨率随画幅增大而增大（格子不小于 MIN_CELL，保证编号可见），但不超过每边上限；
+    // 局部导出：取当前视图格子大小与大图分辨率中的较大者
+    const cell=big ? Math.max(viewCell, cap) : Math.min(Math.max(viewCell, MIN_CELL), cap);
     const W=Math.round(rw*cell), H=Math.round(rh*cell);
     let out=document.createElement('canvas');
     out.width=W; out.height=H;
     const octx=out.getContext('2d');
     octx.imageSmoothingEnabled=false;
-    // 空色块(alpha=0) 导出：默认合成到白底；选「透明」则保留透明
-    if(exportEmptyMode==='white'){
-      octx.fillStyle='#fff';
+    // 空色块(alpha=0) 导出：默认合成到白底；「绿色」合成为绿色底；选「透明」则保留透明
+    if(exportEmptyMode==='white'||exportEmptyMode==='green'){
+      octx.fillStyle=exportEmptyMode==='green' ? '#00ff00' : '#fff';
       octx.fillRect(0,0,W,H);
     }
     octx.drawImage(gridCanvas, gx0,gy0, rw,rh, 0,0, W,H);
@@ -2829,14 +3093,17 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       const strip=buildLegendStrip(W,{x0:gx0,y0:gy0,x1:gx1,y1:gy1});
       if(strip){
         const LG=48;   // 主图与清单之间的间隔
+        const lh=strip.visualHeight;
         const combined=document.createElement('canvas');
-        combined.width=W; combined.height=H+LG+strip.height;
+        combined.width=W; combined.height=H+LG+lh;
         const cctx=combined.getContext('2d');
         cctx.imageSmoothingEnabled=false;
         cctx.drawImage(out,0,0);
-        cctx.fillStyle='#fff'; cctx.fillRect(0,H,W,LG+strip.height);
+        cctx.fillStyle='#fff'; cctx.fillRect(0,H,W,LG+lh);
         cctx.fillStyle='#000'; cctx.fillRect(0,H,W,2);
-        cctx.drawImage(strip.canvas,0,H+LG);
+        cctx.imageSmoothingEnabled=true;   // 清单按低分辨率生成后放大，平滑插值避免锯齿
+        cctx.drawImage(strip.canvas,0,H+LG,W,lh);
+        cctx.imageSmoothingEnabled=false;
         out=combined;
       }else{
         alert('导出范围内没有已标注的色号');
@@ -2855,16 +3122,20 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   function exportPNG(){
     exportRegion(0,0,GRID_W-1,GRID_H-1, false);
   }
-  // 主图导出宽度（整体导出时画布视图宽度；色号清单独立导出时按此宽度排列网格）
-  function mainExportWidth(){
+  // 全画幅导出格子尺寸：分辨率随画幅增大而增大（格子不小于 MIN_CELL），不超过每边上限
+  function fullExportCell(){
     const gs=gridSize();
     const viewCell=gs.w/GRID_W;
     const cap=MAX_EXPORT/Math.max(GRID_W,GRID_H);
-    const cell=Math.min(viewCell, cap);
-    return Math.round(GRID_W*cell);
+    return Math.min(Math.max(viewCell, MIN_CELL), cap);
+  }
+  // 主图导出宽度（整体导出时画布视图宽度；色号清单独立导出时按此宽度排列网格）
+  function mainExportWidth(){
+    return Math.round(GRID_W*fullExportCell());
   }
   // 构建色号清单条：统计区域内实际用到的色号，按主图宽度横向排成多列网格；
-  // 返回 {canvas,height}；无色卡或区域内无编码返回 null
+  // 分辨率受限（LEGEND_MAX_W），拼接时按 visualHeight 放大回视觉大小；
+  // 返回 {canvas,height,visualHeight}；无色卡或区域内无编码返回 null
   function buildLegendStrip(width, rect){
     if(!matchedPalette || !cellCodeIdx) return null;
     const x0=rect?rect.x0:0, y0=rect?rect.y0:0, x1=rect?rect.x1:GRID_W-1, y1=rect?rect.y1:GRID_H-1;
@@ -2877,11 +3148,29 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     }
     if(counts.size===0) return null;
     const idxs=[...counts.keys()].sort((a,b)=>a-b);
-    const pad=20, sw=56, hg=18, vg=16, cellH=110;
-    const cols=Math.min(15,Math.max(1,Math.floor((width-2*pad+hg)/(sw+hg))));
+    // 清单相对整幅是固定比例，无需整幅同等的清晰度：画布超过 LEGEND_MAX_W 时按比例降低分辨率，
+    // 拼接/单独导出时再放大回视觉大小
+    const scale=Math.max(1,Math.ceil(width/LEGEND_MAX_W));
+    const w=Math.round(width/scale);
+    const pad=Math.round(20/scale), hg=Math.round(18/scale);
+    const sz=Math.max(Math.round(16/scale),Math.round(width*LEGEND_RATIO/scale));   // 色块边长：占导出图片宽度的 3%（与格子大小无关）
+    const vg=Math.max(Math.round(6/scale),Math.round(sz*16/56));   // 行间隔随色块放大（基准：56→16）
+    const fs=Math.max(Math.round(5/scale),Math.round(sz*0.5));   // 标注字号：随色块边长缩放
+    const fsCount=Math.max(Math.round(4/scale),Math.round(fs/2));   // 用量字号 = 编号字号的一半
+    // 文字区按字号拉开：编号不与色块重叠，编号与用量之间留间隔
+    const half=Math.max(Math.round(3/scale),Math.round(fs*0.4));
+    const halfC=Math.max(Math.round(2/scale),Math.round(fsCount*0.4));
+    const gapBlock=Math.round(6/scale);   // 色块与编号之间的间隔
+    const gapLine=Math.round(6/scale);    // 编号与用量之间的间隔
+    const codeY=sz+half+gapBlock;         // 编号中心（相对色块顶）
+    const countY=codeY+half+halfC+gapLine;   // 用量中心
+    const cellH=countY+halfC+Math.round(8/scale);   // 行高
+    const cols=Math.min(15,Math.max(1,Math.floor((w-2*pad+hg)/(sz+hg))));
+    const gridW=cols*(sz+hg)-hg;
+    const x0off=Math.round((w-gridW)/2);   // 清单网格整体水平居中，左右边距相等
     const rows=Math.ceil(idxs.length/cols);
     const c=document.createElement('canvas');
-    c.width=width;
+    c.width=w;
     c.height=Math.round(2*pad+rows*cellH+(rows-1)*vg);
     const octx=c.getContext('2d');
     octx.imageSmoothingEnabled=false;
@@ -2889,18 +3178,19 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     for(let k=0;k<idxs.length;k++){
       const i=idxs[k], pal=matchedPalette[i];
       const col=k%cols, row=Math.floor(k/cols);
-      const x=pad+col*(sw+hg), y=pad+row*(cellH+vg);
+      // 行首统一从 x0off 起排：不足 15 个的最后一行与其他行左对齐
+      const x=x0off+col*(sz+hg), y=pad+row*(cellH+vg);
       octx.fillStyle='rgb('+pal.r+','+pal.g+','+pal.b+')';
-      octx.fillRect(x,y,sw,sw);
+      octx.fillRect(x,y,sz,sz);
       octx.strokeStyle='#000'; octx.lineWidth=1;
-      octx.strokeRect(x-0.5,y-0.5,sw+1,sw+1);
+      octx.strokeRect(x-0.5,y-0.5,sz+1,sz+1);
       octx.textAlign='center'; octx.textBaseline='middle'; octx.fillStyle='#000';
-      octx.font='bold 24px sans-serif';
-      octx.fillText(pal.code, x+sw/2, y+sw+18);
-      octx.font='17px sans-serif';
-      octx.fillText('×'+counts.get(i), x+sw/2, y+sw+40);
+      octx.font='bold '+fs+'px sans-serif';
+      octx.fillText(pal.code, x+sz/2, y+codeY);
+      octx.font=fsCount+'px sans-serif';
+      octx.fillText('×'+counts.get(i), x+sz/2, y+countY);
     }
-    return {canvas:c, height:c.height};
+    return {canvas:c, height:c.height, visualHeight:Math.round(c.height*scale)};
   }
   function downloadLegendStrip(strip, x0,y0,x1,y1){
     const rw=x1-x0+1, rh=y1-y0+1;
@@ -2920,12 +3210,12 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     downloadLegendStrip(strip, x0,y0,x1,y1);
   }
 
-  // ---- 导出弹窗 / 框选导出局部 ----
+  // ---- 导出弹窗 / 局部画幅导出 ----
   // 交互：左键单击同时生成矩形选区（蓝色半透明，同套索选区样式）与「确定导出」按钮，
   //       拖动顶点/边调整选区，按下按钮导出；Esc 取消
   const exportPopupEl=document.getElementById('exportPopup');
   const exportOkBtn=document.getElementById('exportOkBtn');
-  let exportEmptyMode='white';   // 空色块导出：'white' 合成白底 / 'transparent' 保留透明
+  let exportEmptyMode='white';   // 空色块导出：'white' 合成白底 / 'green' 合成绿底 / 'transparent' 保留透明
   let legendMode='off';          // 色号清单：'off' 不导出 / 'sep' 单独下载 / 'append' 拼接到主图下方
   let exportRectMode=false;
   let exportRect=null;          // {x0,y0,x1,y1} 格坐标（整数）
@@ -2933,10 +3223,36 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   let exportCornerCur=null;     // 角点期间当前鼠标格，用于预览
   let exportOkPos=null;         // 确定按钮位置（client 坐标）
   let exportDrag=null;          // 拖动状态
+  // 全画幅导出预计尺寸：分辨率随画幅增大而增大；文件大小按约 0.5 字节/像素估算（PNG 对纯色区域压缩较好）。
+  // 勾选色号清单时：拼接导出分别显示 全图 + 清单 大小；单独导出分别说明两张图片。
+  function updateExportStats(){
+    const el=document.getElementById('exportStats');
+    if(!el) return;
+    const cell=fullExportCell();
+    const W=Math.round(GRID_W*cell), H=Math.round(GRID_H*cell);
+    const fmt=(bytes)=>{
+      if(bytes>=1024*1024) return (bytes/(1024*1024)).toFixed(1)+' MB';
+      if(bytes>=1024) return Math.round(bytes/1024)+' KB';
+      return bytes+' B';
+    };
+    const full=fmt(Math.round(W*H/2));
+    const head='全画幅导出预计 '+W+' × '+H+' px · ';
+    if(legendMode!=='off'){
+      const strip=buildLegendStrip(mainExportWidth(), null);
+      if(strip){
+        const legend=fmt(Math.round(strip.canvas.width*strip.height/2));
+        if(legendMode==='append') el.textContent=head+'约 '+full+' + '+legend+'（全图 + 清单）';
+        else el.textContent=head+'全图约 '+full+'，清单约 '+legend;
+        return;
+      }
+    }
+    el.textContent=head+'约 '+full;
+  }
   function openExportPopup(){
     closeRulerMenu();
     const lb=document.getElementById('legendBtn');
     if(lb) lb.disabled=!(matchedPalette&&cellCodeIdx);
+    updateExportStats();
     exportPopupEl.style.display='flex';
   }
   function closeExportPopup(){
@@ -2962,6 +3278,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       if(b.dataset.legendExport){
         legendMode=b.dataset.legendExport;
         exportPopupEl.querySelectorAll('[data-legend-export]').forEach(x=>x.classList.toggle('active',x===b));
+        updateExportStats();
         return;   // 切换色号清单选项不关闭弹层
       }
       if(b.dataset.emptyExport){
@@ -2981,6 +3298,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     exportRegion(exportRect.x0,exportRect.y0,exportRect.x1,exportRect.y1, true);
     statusEl.textContent='已导出局部区域 '+(exportRect.x1-exportRect.x0+1)+'×'+(exportRect.y1-exportRect.y0+1)+' 格';
     exitExportRect();
+    render();
   });
   function enterExportRectMode(){
     if(rulerPlacing) cancelRulerPlace();
@@ -3186,6 +3504,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     gridWInput.disabled=locked;
     gridHInput.disabled=locked;
     squareSlider.disabled=locked;
+    document.querySelectorAll('.size-preset').forEach(b=>b.disabled=locked);
     const btn=document.getElementById('applySizeBtn');
     if(btn) btn.disabled=locked;
     const hint=document.getElementById('sizeLockHint');
@@ -3205,6 +3524,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     syncUndoRedo();
     rebuildGrid();
     clearRulers();
+    symX=GRID_W/2; symY=GRID_H/2;   // 尺寸变化后对称轴回到画布中央
     if(importedImg&&(importedImg.naturalWidth||importedImg.width)){
       rasterizeImageToGrid(importedImg);
       // 画布已按新尺寸重新栅格化原图，同步更新原图快照的尺寸与像素，
@@ -3233,6 +3553,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     }
     render();
     scheduleAutoSave();
+    updateExportStats();   // 尺寸变化后刷新导出预计尺寸
   }
   function applySquareSize(n){
     n=Math.max(1,Math.min(GRID_MAX,n));
@@ -3261,6 +3582,12 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     if(w===GRID_W&&h===GRID_H) return;
     resizeGridTo(w,h);
     statusEl.textContent='已改为 '+GRID_W+'×'+GRID_H;
+  });
+  // 尺寸预设
+  document.querySelectorAll('.size-preset').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      applySquareSize(parseInt(btn.dataset.size,10));
+    });
   });
 
   // ---- 自定义颜色：环形取色器 ----
@@ -3373,7 +3700,8 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     drawWheel();
   }
   function closeWheel(){
-    if(customHex!==wheelStartHex) addHistory(customHex);
+    // 颜色有变化才视为选定：提交历史 + 有选区则替换 + 橡皮状态切回画笔（与原生取色器一致）
+    if(customHex!==wheelStartHex) pickColor(customHex);
     wheelStartHex=null;
     wheelOverlay.style.display='none';
     dragging=false; wheelMode=null;
@@ -3386,8 +3714,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       const hex=v.startsWith('#')?v:'#'+v;
       const hsv=hexToHsv(hex);
       H=hsv.h; S=hsv.s; V=hsv.v; customHex=hex;
-      wheelApply(); drawWheel();
-      addHistory(hex);
+      wheelApply(); drawWheel();   // 只预览，由「完成」时统一提交
     }else{
       wheelHex.value=customHex.toUpperCase();
     }
@@ -3548,6 +3875,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     if(!d||!d.px) return;
     const w=d.w||GRID_W, h=d.h||GRID_H;
     if(w!==GRID_W||h!==GRID_H){ GRID_W=w; GRID_H=h; rebuildGrid(); }
+    symX=GRID_W/2; symY=GRID_H/2;   // 载入草稿后对称轴回到画布中央
     const pxU8=b64ToBytes(d.px);
     if(pxU8.length===GRID_W*GRID_H*4){
       pixels=new Uint8ClampedArray(pxU8.buffer);
@@ -3600,6 +3928,9 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     mag=1; offX=0; offY=0;
     // 载入草稿视为新画布：清除手动绘制标记，避免上个画布的锁定状态残留
     userEdited=false;
+    // 没有导入原图、仅含作画痕迹的草稿：锁定画布尺寸，避免误触导致画面拉伸畸变
+    //（有原图快照/原图像素的可按原图重栅格化，无原图只能最近邻拉伸，故须锁定；render() 会刷新锁定 UI）
+    if(!lastImported&&!d.oimg&&!isCanvasBlank()) userEdited=true;
     render();
   }
   function draftThumb(d){
