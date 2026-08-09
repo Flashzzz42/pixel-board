@@ -21,7 +21,7 @@
 
 | 系统 | 架构 | 安装包 | 说明 |
 | --- | --- | --- | --- |
-| Windows 11 | x64 | `像素画板_1.3.1_x64-setup.exe` | NSIS 安装程序 |
+| Windows 11 | x64 | `pixel-board-1.3.1-win-x64-setup.exe` | NSIS 安装程序 |
 
 > macOS 版自 v1.1.0 起停止发布。
 
