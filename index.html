@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>像素画板 · 400×400</title>
+<title>像素工坊 · 400×400</title>
 <style>
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -3765,7 +3765,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   function updateSizeLabel(){
     const sizeEl=document.getElementById('sizeLabel');
     if(sizeEl) sizeEl.textContent=GRID_W+'×'+GRID_H+'（'+GRID_W*GRID_H+' 格）';
-    document.title='像素画板 · '+GRID_W+'×'+GRID_H;
+    document.title='像素工坊 · '+GRID_W+'×'+GRID_H;
   }
   document.getElementById('applySizeBtn').addEventListener('click',()=>{
     let w=parseInt(gridWInput.value,10)||GRID_W;
