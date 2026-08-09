@@ -29,6 +29,26 @@ header .hint{font-size:12px;color:#888}
 .theme-btn:active{background:#e4e4ea}
 .header-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
 .header-actions .theme-btn{margin-left:0}
+/* 界面整体缩放（仅 exe / WebView2）：配合 WebView2 ZoomFactor，与浏览器页面缩放效果一致；
+   默认 80% 记作 100%，重置回到该默认 */
+.zoom-row{display:none;align-items:center;gap:3px;background:#fff;border:1px solid #ccc;border-radius:8px;padding:3px 4px;flex:none}
+.zoom-row.show{display:flex}
+.zoom-btn{width:24px;height:24px;font-size:15px;line-height:1;border:none;background:transparent;cursor:pointer;color:#333;border-radius:6px;padding:0}
+.zoom-btn:hover{background:#f0f0f4}
+.zoom-btn:active{background:#e4e4ea}
+.zoom-val{min-width:46px;text-align:center;font-size:13px;color:#555;user-select:none}
+.zoom-slider{width:88px;height:14px;accent-color:#2563eb;cursor:pointer;margin:0 2px}
+.zoom-reset{white-space:nowrap;height:24px;padding:0 8px;font-size:13px;line-height:1;cursor:pointer;color:#333;background:#fff;border:1px solid #ccc;border-radius:6px}
+.zoom-reset:hover{background:#f0f0f4}
+.zoom-reset:active{background:#e4e4ea}
+body.dark .zoom-row{background:#23242d;border-color:#3a3b47}
+body.dark .zoom-btn{color:#e3e4ea}
+body.dark .zoom-btn:hover{background:#34353f}
+body.dark .zoom-btn:active{background:#3d3e4a}
+body.dark .zoom-val{color:#c9cad2}
+body.dark .zoom-reset{background:#23242d;border-color:#3a3b47;color:#e3e4ea}
+body.dark .zoom-reset:hover{background:#34353f}
+body.dark .zoom-reset:active{background:#3d3e4a}
 main{
   flex:1;min-height:0;
   display:flex;gap:16px;padding:16px;
@@ -381,6 +401,7 @@ body.dark .sym-row button.active{background:#3a3f5c;border-color:#6d7cff;color:#
   margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid #eee;
 }
 .help-page .h-line{margin:8px 0 0}
+.help-page .h-line.h-sub{margin-top:16px}
 .help-page .h-line b{font-weight:700;color:#333}
 body.dark .help-page .h-line b{color:#e3e4ea}
 .help-footer{
@@ -498,6 +519,13 @@ body.dark .history .h-swatch{background:#2a2b35}
 <header>
   <span class="hint">左键绘制 · 右键擦除 · Ctrl+滚轮缩放 · Ctrl+Z 撤销 · 支持导入图片</span>
   <div class="header-actions">
+    <span class="zoom-row" id="zoomRow" title="界面整体缩放（仅桌面版）">
+      <button class="zoom-btn" id="zoomOutBtn" title="界面缩小 10%">−</button>
+      <input type="range" class="zoom-slider" id="zoomSlider" min="50" max="250" step="5" value="100" title="拖动调整界面大小">
+      <button class="zoom-btn" id="zoomInBtn" title="界面放大 10%">＋</button>
+      <span class="zoom-val" id="zoomVal">100%</span>
+      <button class="zoom-reset" id="zoomResetBtn" title="重置为默认比例（100%）">重置</button>
+    </span>
     <button class="theme-btn" id="themeBtn" title="切换浅色 / 深色模式">🌙 深色</button>
     <button class="theme-btn" id="helpBtn" title="打开使用说明（书页式，可拖动）">📖 说明</button>
   </div>
@@ -726,6 +754,42 @@ body.dark .history .h-swatch{background:#2a2b35}
   }
   if(themeBtn) themeBtn.addEventListener('click', ()=>applyTheme(!document.body.classList.contains('dark')));
   applyTheme(localStorage.getItem('pixel_board_theme') === 'dark');
+
+  // ---- 界面整体缩放（仅 exe / WebView2）：调 WebView2 ZoomFactor，效果同浏览器页面缩放。
+  //      拖动滑块时页面不随之缩放（避免光标偏离滑块导致失控），松开后生效；「− / ＋」每次微调 10%；
+  //      显示 100% 即默认比例（实际 80% 缩放），重置回到默认 ----
+  const __tauri = window.__TAURI__ && window.__TAURI__.core && window.__TAURI__.core.invoke;
+  const zoomRow = document.getElementById('zoomRow');
+  const zoomVal = document.getElementById('zoomVal');
+  const zoomSlider = document.getElementById('zoomSlider');
+  const UI_ZOOM_BASE = 0.8;
+  const ZOOM_MIN = 50, ZOOM_MAX = 250;  // 显示百分比范围
+  let uiZoom = +(localStorage.getItem('pixel_board_ui_zoom') || UI_ZOOM_BASE);
+  if(__tauri){
+    function dispPct(){ return Math.round(uiZoom / UI_ZOOM_BASE * 100); }
+    function setZoomLabel(d){ if(zoomVal) zoomVal.textContent = d + '%'; }
+    function applyZoomPct(p){
+      const d = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(p)));
+      uiZoom = Math.round(d * 8) / 1000;  // d/100*0.8，整数运算避免浮点误差
+      localStorage.setItem('pixel_board_ui_zoom', String(uiZoom));
+      setZoomLabel(d);
+      if(zoomSlider) zoomSlider.value = d;
+      window.__TAURI__.core.invoke('set_zoom', { factor: uiZoom }).catch(function(){});
+    }
+    if(zoomRow) zoomRow.classList.add('show');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomResetBtn = document.getElementById('zoomResetBtn');
+    if(zoomOutBtn) zoomOutBtn.addEventListener('click', function(){ applyZoomPct(dispPct()-10); });
+    if(zoomInBtn) zoomInBtn.addEventListener('click', function(){ applyZoomPct(dispPct()+10); });
+    // 拖动中只更新百分比提示，松开（change）才真正缩放，避免光标偏离滑块
+    if(zoomSlider){
+      zoomSlider.addEventListener('input', function(){ setZoomLabel(Math.round(+zoomSlider.value)); });
+      zoomSlider.addEventListener('change', function(){ applyZoomPct(+zoomSlider.value); });
+    }
+    if(zoomResetBtn) zoomResetBtn.addEventListener('click', function(){ applyZoomPct(100); });
+    applyZoomPct(dispPct());  // 启动时恢复上次缩放（首次为默认 80% = 显示 100%）
+  }
 
   // ---- 数据层：每个格子的 RGBA ----
   let pixels = new Uint8ClampedArray(GRID_W*GRID_H*4);
@@ -4373,7 +4437,8 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       '· 导入图片：点击「📁 导入图片」选择文件，或把图片拖到窗口任意位置（含画布）松开即导入；图片自动缩放到不超过当前画布尺寸并居中',
       '· 导出 PNG：「⬇ 导出 PNG」可全画幅导出（分辨率随画幅增大而增大，上限 8192px，画幅越大编号越清晰），或「局部画幅导出」后单击画布两次分别确定对角顶点（第 2 次点击后出现「✔ 确定导出」，可拖动顶点 / 边线调整、选区内平移），点击「✔ 确定导出」按该区域高清导出，Esc 取消；空色块可选「白色 / 绿色 / 透明」，透明时仅色块周围保留辅助线',
       '· 色号清单：匹配色卡并标注编号后，「导出 PNG」可选清单「关 / 单独 / 拼接」——单独时另存一张清单图，拼接时直接附在主图下方（留 48px 间隔）；清单与主图同宽、横排多列（每行至多 15 个色块），显示色块、编号与用量，范围与导出的主图一致；导出弹层内会预估导出尺寸与文件大小',
-      '· 清空 / 清理：「🗑 清空画布」清空全部像素；「🧽 清除作画痕迹」按导入原图重新渲染覆盖手绘痕迹（无原图时等同清空画布），同时解除尺寸锁定'
+      '· 清空 / 清理：「🗑 清空画布」清空全部像素；「🧽 清除作画痕迹」按导入原图重新渲染覆盖手绘痕迹（无原图时等同清空画布），同时解除尺寸锁定',
+      '· 界面缩放（桌面版专属）：右上角拖动滑块整体放大 / 缩小界面（松开后生效，拖动中只显示百分比预览），两侧「− / ＋」每次微调 10%，显示 100% 即默认比例，「重置」回到默认；调整后自动记住，下次启动生效'
     ]},
     {t:'快捷键',h:[
       '· 撤销 / 重做：Ctrl+Z 撤销 · Ctrl+Y 重做',
@@ -4389,7 +4454,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       '· 载入没有导入原图、仅含作画痕迹的草稿时尺寸会自动锁定，防止误触拉伸畸变；「🧽 清除作画痕迹」可按导入原图重新渲染覆盖手绘痕迹（无原图时等同清空画布），同时解除锁定'
     ]},
     {t:'作者',h:[
-      '· 应用：像素工坊 v1.3.1',
+      '· 应用：像素工坊 v1.3.2',
       '· 作者：Flashzzz42⚡',
       '· 更新：新版本发布在 GitHub Releases：https://github.com/Flashzzz42/pixel-board',
       '· 反馈：如有问题或建议，欢迎到 GitHub 上反馈'
@@ -4409,7 +4474,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     // 去掉行首「· 」，若以「xx：」开头的子标题则把标题和冒号加粗
     const text=l.replace(/^· /,'');
     const m=text.match(/^(.+?：)/);
-    return m?'<p class="h-line"><b>'+m[1]+'</b>'+text.slice(m[1].length)+'</p>':'<p class="h-line">'+text+'</p>';
+    return m?'<p class="h-line h-sub"><b>'+m[1]+'</b>'+text.slice(m[1].length)+'</p>':'<p class="h-line">'+text+'</p>';
   }
   function buildHelpPages(){
     // 内容摊平成「标题块 + 每行一块」，逐块填充当前页；
