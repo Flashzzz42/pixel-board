@@ -27,6 +27,8 @@ header .hint{font-size:12px;color:#888}
 }
 .theme-btn:hover{background:#f0f0f4}
 .theme-btn:active{background:#e4e4ea}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.header-actions .theme-btn{margin-left:0}
 main{
   flex:1;min-height:0;
   display:flex;gap:16px;padding:16px;
@@ -91,10 +93,14 @@ main{
   background:#fff;
 }
 .status{
-  position:absolute;bottom:8px;left:12px;right:12px;
+  /* 按内容收缩：短状态一条短框，长状态被 max-width 封顶后换行，完整显示不占全宽 */
+  position:absolute;bottom:8px;left:12px;
+  width:max-content;max-width:calc(100% - 24px);
   background:rgba(255,255,255,.92);
   font-size:12px;color:#666;
-  font-family:Consolas,monospace;min-height:16px;word-break:break-all;
+  font-family:Consolas,monospace;min-height:16px;
+  overflow-wrap:anywhere;white-space:normal;
+  padding:2px 8px;border-radius:6px;
   pointer-events:none;
 }
 aside,.side-panel{
@@ -234,7 +240,7 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .btn-primary{background:#2563eb;color:#fff;border:1px solid #2563eb}
 .btn-plain{background:#fff;border:1px solid #ccc}
 #exportBtn,#clearBtn{height:54px}   /* 高约增至原来的 1.5 倍 */
-.zoom-row{display:flex;align-items:center;gap:8px;font-size:16px;color:#444;padding:2px 0}
+.zoom-row{display:none}  /* 显示倍率与 Ctrl+滚轮重复，冗余，隐藏 */
 .match-popup{
   position:absolute;top:76px;right:10px;z-index:6;
   background:#fff;border:1px solid #ccc;border-radius:8px;
@@ -291,6 +297,14 @@ aside h2{font-size:16px;margin:0 0 8px;color:#444;border-bottom:1px solid #eee;p
 .slider-row span{min-width:38px;text-align:right;font-family:Consolas,monospace;font-size:15px;color:#333}
 .size-lock-hint{margin:8px 0 0;font-size:13px;color:#d97706;line-height:1.5}
 body.dark .size-lock-hint{color:#f0b45c}
+.size-frame{
+  border:2px solid #ccc;
+  border-radius:12px;
+  padding:12px;
+  background:#fff;
+}
+.size-frame h2{margin-top:0}
+body.dark .size-frame{background:#23242d;border-color:#4a4b58}
 .sym-row{display:none;flex-wrap:wrap;gap:4px;margin-top:10px}
 .sym-row.show{display:flex}
 .sym-row button{flex:1 1 30%;padding:6px 0;font-size:13px;border:1px solid #d0d0d0;border-radius:5px;
@@ -311,6 +325,90 @@ body.dark .sym-row button.active{background:#3a3f5c;border-color:#6d7cff;color:#
 .tips summary::-webkit-details-marker{display:none}
 .tips summary::after{content:'▸';margin-left:auto;color:#999;font-size:12px;transition:transform .15s}
 .tips[open] summary::after{transform:rotate(90deg)}
+/* 📖 使用说明：书页式可拖动弹窗 */
+.help-overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(15,17,22,.35);
+}
+.help-book{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(960px,92vw);height:min(680px,88vh);
+  background:#fff;border:1px solid #d8d8e0;border-radius:12px;
+  box-shadow:0 12px 44px rgba(0,0,0,.3);
+  display:flex;flex-direction:column;overflow:visible;
+}
+.help-titlebar{
+  flex:none;display:flex;align-items:center;justify-content:space-between;
+  padding:22px 14px 10px;background:#f4f5fa;border-bottom:1px solid #e2e3ea;
+  border-radius:12px 12px 0 0;
+  cursor:move;user-select:none;font-weight:600;color:#333;font-size:18px;
+}
+.help-close{
+  border:none;background:transparent;font-size:16px;cursor:pointer;
+  color:#888;padding:2px 8px;border-radius:6px;line-height:1;
+}
+.help-close:hover{background:#e4e4ea;color:#333}
+.help-body{flex:1;min-height:0;display:flex}
+.help-toc{
+  height:0;overflow:visible;
+  display:flex;gap:0;flex-wrap:wrap;
+  padding:0 18px;position:relative;z-index:5;
+}
+.help-toc button{
+  position:relative;
+  border:1px solid #d8d8e0;border-bottom:none;background:#fff;cursor:pointer;
+  padding:7px 14px 8px;border-radius:5px 5px 0 0;
+  margin-top:-32px;
+  color:#555;font-size:16px;line-height:1.3;
+  box-shadow:0 -3px 8px rgba(0,0,0,.05);
+}
+.help-toc button + button{margin-left:-1px}
+.help-toc button::after{
+  content:'';position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);
+  width:0;height:0;border:5px solid transparent;border-top:5px solid #f4f5fa;
+}
+.help-toc button:hover{background:#f4f5fa;color:#333}
+.help-toc button.active{background:#e8edf7;color:#2b4a8f;font-weight:600}
+.help-stage{flex:1;min-width:0;position:relative}
+.help-page{
+  position:absolute;inset:0;box-sizing:border-box;
+  padding:20px 24px;overflow:hidden;
+  font-size:18px;line-height:1.8;color:#555;
+  background:#fff;
+}
+.help-page .h-title{
+  font-size:21px;font-weight:600;color:#333;
+  margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid #eee;
+}
+.help-page .h-line{margin:8px 0 0}
+.help-page .h-line b{font-weight:700;color:#333}
+body.dark .help-page .h-line b{color:#e3e4ea}
+.help-footer{
+  flex:none;display:flex;align-items:center;justify-content:center;gap:14px;
+  padding:10px 14px;border-top:1px solid #eee;background:#fafbfe;
+  border-radius:0 0 12px 12px;
+}
+.help-nav{
+  border:1px solid #ccc;background:#fff;border-radius:6px;
+  padding:6px 16px;cursor:pointer;font-size:16px;color:#333;
+}
+.help-nav:hover{background:#f0f0f4}
+.help-nav:disabled{opacity:.4;cursor:not-allowed}
+.help-pageinfo{font-size:16px;color:#888;min-width:80px;text-align:center}
+body.no-select{user-select:none}
+body.dark .help-book{background:#1d1e26;border-color:#4a4b58}
+body.dark .help-titlebar{background:#23242d;border-bottom-color:#3a3b47;color:#e3e4ea}
+body.dark .help-toc button{border-color:#4a4b58;background:#23242d;color:#b6b9c8}
+body.dark .help-toc button::after{border-top-color:#23242d}
+body.dark .help-toc button:hover{background:#2f3039;color:#e3e4ea}
+body.dark .help-toc button.active{background:#2f3a55;color:#a7c4ff}
+body.dark .help-page{color:#b6b9c8;background:#1d1e26}
+body.dark .help-page .h-title{color:#e3e4ea;border-bottom-color:#3a3b47}
+body.dark .help-footer{background:#23242d;border-top-color:#3a3b47}
+body.dark .help-nav{background:#23242d;border-color:#4a4b58;color:#e3e4ea}
+body.dark .help-nav:hover{background:#2f3039}
+body.dark .help-pageinfo{color:#8a8da0}
+body.dark .help-close:hover{background:#2f3039;color:#e3e4ea}
 .draft-lib{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;
   background:#fff;border:1px solid #d8d8e0;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.06);padding:12px}
 .draft-lib-head{flex:none;display:flex;align-items:center;gap:8px;margin-bottom:10px}
@@ -338,6 +436,7 @@ body.dark .sym-row button.active{background:#3a3f5c;border-color:#6d7cff;color:#
 .draft-ops button:hover{background:rgba(225,29,72,.9)}
 .draft-ops button[data-act="rename"]:hover{background:rgba(74,109,181,.95)}
 .draft-ops button[data-act="dup"]:hover{background:rgba(37,130,90,.95)}
+.draft-ops button[data-act="export"]:hover{background:rgba(74,109,181,.95)}
 .draft-empty{grid-column:1/-1;display:flex;align-items:center;justify-content:center;text-align:center;
   font-size:14px;color:#999;line-height:1.8;padding:40px 0}
 .draft-new-btn{padding:6px 12px;font-size:14px}
@@ -398,37 +497,42 @@ body.dark .history .h-swatch{background:#2a2b35}
 <body>
 <header>
   <span class="hint">左键绘制 · 右键擦除 · Ctrl+滚轮缩放 · Ctrl+Z 撤销 · 支持导入图片</span>
-  <button class="theme-btn" id="themeBtn" title="切换浅色 / 深色模式">🌙 深色</button>
+  <div class="header-actions">
+    <button class="theme-btn" id="themeBtn" title="切换浅色 / 深色模式">🌙 深色</button>
+    <button class="theme-btn" id="helpBtn" title="打开使用说明（书页式，可拖动）">📖 说明</button>
+  </div>
 </header>
 <main>
   <div class="side-panel">
     <section>
-      <h2>像素空间尺寸</h2>
-      <div class="size-row">
-        <label>宽 <input type="number" id="gridW" min="1" max="500" value="400"></label>
-        <label>高 <input type="number" id="gridH" min="1" max="500" value="400"></label>
-      </div>
-      <div class="preset-row">
-        <button class="btn-plain size-preset" data-size="12" title="超小号 12×12">超小号<br>12</button>
-        <button class="btn-plain size-preset" data-size="52" title="小号 52×52">小号<br>52</button>
-        <button class="btn-plain size-preset" data-size="78" title="中号 78×78">中号<br>78</button>
-        <button class="btn-plain size-preset" data-size="104" title="大号 104×104">大号<br>104</button>
-        <button class="btn-plain size-preset" data-size="120" title="特大号 120×120">特大号<br>120</button>
-      </div>
-      <div class="actions">
-        <button class="btn-plain" id="applySizeBtn">应用尺寸</button>
-      </div>
-      <p class="size-lock-hint" id="sizeLockHint" style="display:none">🔒 已绘制内容，尺寸已锁定（撤销到空白可解除锁定）</p>
-      <div class="slider-row">
-        <span class="slider-label">正方形</span>
-        <input type="range" id="squareSlider" min="1" max="500" value="200">
-        <span id="squareSliderVal">200</span>
+      <div class="size-frame">
+        <h2>像素空间尺寸</h2>
+        <div class="size-row">
+          <label>宽 <input type="number" id="gridW" min="1" max="500" value="400"></label>
+          <label>高 <input type="number" id="gridH" min="1" max="500" value="400"></label>
+        </div>
+        <div class="preset-row">
+          <button class="btn-plain size-preset" data-size="12" title="超小号 12×12">超小号<br>12</button>
+          <button class="btn-plain size-preset" data-size="52" title="小号 52×52">小号<br>52</button>
+          <button class="btn-plain size-preset" data-size="78" title="中号 78×78">中号<br>78</button>
+          <button class="btn-plain size-preset" data-size="104" title="大号 104×104">大号<br>104</button>
+          <button class="btn-plain size-preset" data-size="120" title="特大号 120×120">特大号<br>120</button>
+        </div>
+        <div class="actions">
+          <button class="btn-plain" id="applySizeBtn">应用尺寸</button>
+        </div>
+        <p class="size-lock-hint" id="sizeLockHint" style="display:none">🔒 已绘制内容，尺寸已锁定（撤销到空白可解除锁定）</p>
+        <div class="slider-row">
+          <span class="slider-label">正方形</span>
+          <input type="range" id="squareSlider" min="1" max="500" value="200">
+          <span id="squareSliderVal">200</span>
+        </div>
       </div>
     </section>
     <section>
       <h2>操作</h2>
       <div class="actions">
-        <button class="btn-primary" id="importBtn"><span class="import-main">📁 导入图片</span><span class="import-sub">（可拖拽图片导入）</span></button>
+        <button class="btn-plain" id="importBtn"><span class="import-main">📁 导入图片</span><span class="import-sub">（可拖拽图片导入）</span></button>
         <button class="btn-plain" id="exportBtn">⬇ 导出 PNG</button>
         <div class="export-inline" id="exportPopup" style="display:none">
           <button data-export-action="full">⬜ 全画幅导出</button>
@@ -469,27 +573,10 @@ body.dark .history .h-swatch{background:#2a2b35}
       <div class="actions">
         <button class="btn-plain" id="draftLibBtn">🗂 画布草稿库</button>
         <button class="btn-plain" id="saveDraftBtn">💾 保存作画</button>
+        <button class="btn-plain" id="exportDraftBtn" title="导出当前画布为草稿文件">📤 导出草稿文件</button>
+        <button class="btn-plain draft-import-btn" title="导入他人分享的草稿文件（.json）">📥 导入草稿文件</button>
       </div>
     </section>
-    <details class="tips">
-      <summary>说明</summary>
-      <p class="tips-h">绘制</p>
-      <p>· 左键 / 拖动：用当前颜色绘制<br>· 右键 / 拖动：擦除为空白（空色块与白色珠在数据上有区分，导出时可选表示方式）<br>· 取色：点击画面吸取颜色<br>· 填充：填充同色连通区域<br>· 对称轴：工具行「〰 对称轴」点击开启并默认「左右」，下方展开选项行（左右 / 上下 / 双轴 / 45°斜 / 135°斜 / 双斜）切换类型、「↺ 复位轴线」把轴回到中央，再点「〰 对称轴」关闭整个功能（关闭后轴复位到中央）；左右 / 上下 / 双轴可编辑模式下拖动红色轴线调整位置（吸附到方格线或格中），斜向轴过画布中心（仅正方形画布），画笔 / 橡皮按轴线镜像到对侧，可配合套索选区使用（套索选区与其镜像求并集，跨轴线两侧同时选中）；取色 / 填充 / 标尺 / 同色选择点击时自动关闭对称轴</p>
-      <p class="tips-h">选区</p>
-      <p>· 套索：在画布上拖动画出任意形状的选区；「反选」选中选区之外的像素，「清除选区」取消选择<br>· 存在选区时：🪣 填充只作用于选区内的像素；「删除选区内容」将选区内的像素恢复为空白</p>
-      <p class="tips-h">标尺</p>
-      <p>· 每格边长对应现实中 2.6mm。前两次点击确定测量两点并生成实线，第三次点击确认生成带箭头的尺寸线与数值；按 Esc 取消本次标注<br>· 拖动线段平移整条标注，拖动端点移动单个端点；点击线段可「删除线段」；鼠标移到标注线上显示两测量点半圆虚线，移到测量点上显示完整虚线圆</p>
-      <p class="tips-h">导入 / 导出</p>
-      <p>· 导入图片：点击「📁 导入图片」选择文件，或直接把图片拖入窗口（松开即导入）；图片自动缩放到不超过当前画布尺寸并居中<br>· 导出 PNG：可「全画幅导出」——分辨率随画幅增大而增大（上限 8192px，画幅越大编号越清晰），或「局部画幅导出」后单击画布两次分别确定两个对角顶点（第 2 次点击后出现「✔ 确定导出」，拖动顶点 / 边线调整、选区内拖动平移），点击「✔ 确定导出」按该区域高清导出，Esc 取消；空色块可选「白色 / 绿色 / 透明」，透明时仅色块周围保留辅助线<br>· 色号清单：匹配色卡并标注编号后，「导出 PNG」可选色号清单「关 / 单独 / 拼接」——单独时另存一张清单图，拼接时清单直接附在主图下方（留 48px 间隔）；清单与主图同宽、横排多列（每行至多 15 个色块），显示色块、编号与用量，范围与导出的主图一致；导出弹层内会按当前画布与清单预估导出尺寸与文件大小</p>
-      <p class="tips-h">匹配色卡 / 拼豆色卡</p>
-      <p>· 点击画布右上角「🎨 匹配色卡」并选择色卡，把「原图有颜色且画布当前也有颜色」的交集匹配为该色卡中最接近的颜色，空白区域保持空白<br>· 匹配后「🏷 标注编号」解锁：在每个像素方块中心显示对应色卡编号（如 A1），放大后更清晰<br>· 画布右上角「🔳 隐藏边框」可显示或隐藏像素格黑色边框<br>· 左侧「🧮 拼豆色卡」展开列表，点击 MARD / COCO 色卡或导入的色卡弹出大色卡；色卡头部下拉可按匹配色卡的子集（24 / 48 / 72…色、全色）筛选，所选子集之外的颜色置灰、不可选中（含下方编号），便于对照；右上角「✕」可收起色卡窗口</p>
-      <p class="tips-h">尺寸</p>
-      <p>· 像素空间尺寸可自定义（最大 500×500）；修改时：已导入图片则从原图按新尺寸重新绘制居中，否则最近邻放大 / 缩小现有内容<br>· 画布已有绘制内容时会锁定尺寸（含没有导入原图、仅有作画痕迹的草稿），避免误触拉伸畸变；撤销到空白或点「🧽 清除作画痕迹」可解除锁定</p>
-      <p class="tips-h">草稿库</p>
-      <p>· 画布修改会自动保存到当前草稿，也可点「💾 保存作画」或 Ctrl+S 立即保存<br>· 「🗂 画布草稿库」打开画廊：可「＋ 新建画布」，对草稿重命名 / 复制 / 删除，点击卡片切换画布，修改自动写回对应草稿<br>· 载入没有导入原图、仅含作画痕迹的草稿时尺寸会自动锁定，防止误触拉伸畸变；「🧽 清除作画痕迹」可按导入原图重新渲染覆盖手绘痕迹（无原图时等同清空画布），同时解除锁定</p>
-      <p class="tips-h">视图与快捷键</p>
-      <p>· 缩放：画布内 Ctrl+滚轮 放大 / 缩小，1× 为完整视图<br>· 平移：放大后按住空格键拖动，或按住鼠标中键拖动；也可直接用滚轮<br>· 快捷键：Ctrl+Z 撤销 · Ctrl+Y 重做<br>· 顶栏最右「🌙 深色」按钮切换浅色 / 深色模式</p>
-    </details>
   </div>
   <div class="canvas-area">
     <div class="canvas-wrap">
@@ -500,8 +587,10 @@ body.dark .history .h-swatch{background:#2a2b35}
       <div class="draft-lib-head">
         <span id="draftLibCount">画布草稿库（0）</span>
         <button class="btn-plain draft-new-btn" id="draftNewBtn">＋ 新建画布</button>
+        <button class="btn-plain draft-import-btn" id="importDraftBtn" title="导入他人分享的草稿文件（.json）">📥 导入草稿文件</button>
         <button class="btn-plain draft-back-btn" id="draftBackBtn">↩ 返回画布</button>
       </div>
+      <input type="file" id="draftFileInput" accept=".json,application/json" style="display:none">
       <div class="draft-lib-grid" id="draftLibGrid"></div>
     </div>
     <div class="corner-stack">
@@ -536,8 +625,8 @@ body.dark .history .h-swatch{background:#2a2b35}
         <button data-tool="picker">💧 取色</button>
         <button data-tool="fill">🪣 填充</button>
         <button data-tool="lasso">🔖 套索</button>
-        <button data-tool="sym">〰 对称轴</button>
         <button data-tool="selcolor">🧲 同色选择</button>
+        <button data-tool="sym">〰 对称轴</button>
         <button data-tool="ruler">📏 标尺</button>
       </div>
       <div class="select-row" id="selectRow">
@@ -585,6 +674,25 @@ body.dark .history .h-swatch{background:#2a2b35}
     </details>
   </aside>
 </main>
+<div class="help-overlay" id="helpOverlay" style="display:none">
+  <div class="help-book" id="helpBook">
+    <div class="help-toc" id="helpToc"></div>
+    <div class="help-titlebar" id="helpTitlebar">
+      <span class="help-title">📖 使用说明</span>
+      <button class="help-close" id="helpClose" title="关闭（Esc）">✕</button>
+    </div>
+    <div class="help-body">
+      <div class="help-stage">
+        <div class="help-page" id="helpPage"></div>
+      </div>
+    </div>
+    <div class="help-footer">
+      <button class="help-nav" id="helpPrev">◀ 上一页</button>
+      <span class="help-pageinfo" id="helpPageInfo"></span>
+      <button class="help-nav" id="helpNext">下一页 ▶</button>
+    </div>
+  </div>
+</div>
 <div class="wheel-overlay" id="wheelOverlay" style="display:none">
   <div class="wheel-box">
     <h2>自定义颜色</h2>
@@ -2736,12 +2844,13 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
           importedImgDataURL=tmp.toDataURL('image/png');
         }catch(e){ importedImgDataURL=null; }
       }
+      // 先采快照（含旧色卡与旧编号），再清空匹配状态，保证撤回能还原旧编号
+      const before=snapshot();
       matchedPalette=null;
       matchedCard=null;
       cellCodeIdx.fill(NO_CODE);
       showCodes=false;
       updateCodeBtn();
-      const before=snapshot();
       fillWhite();
       const ox=Math.floor((GRID_W-w)/2);
       const oy=Math.floor((GRID_H-h)/2);
@@ -2775,6 +2884,8 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       alert('未找到色卡数据');
       return;
     }
+    // 先采快照（含当前色卡与编号），再清号/换卡，保证撤回能完整还原旧编号与旧色卡
+    const before=snapshot();
     matchedPalette=palette;
     matchedCard=card;
     cellCodeIdx.fill(NO_CODE);
@@ -2784,7 +2895,6 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     // 这样切换子集时，被擦除/清空的格不会用原图重新补色回来。
     const src=(importedImg&&(importedImg.naturalWidth||importedImg.width)?rasterizeImage(importedImg,GRID_W,GRID_H):
                (lastImported&&lastImported.w===GRID_W&&lastImported.h===GRID_H?lastImported.data.pixels:pixels));
-    const before=snapshot();
     let changed=0;
     for(let y=0;y<GRID_H;y++){
       for(let x=0;x<GRID_W;x++){
@@ -2968,30 +3078,51 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   const importBtn=document.getElementById('importBtn');
   const isFileDrag=e=>e.dataTransfer&&Array.from(e.dataTransfer.types||[]).includes('Files');
   function setImportText(t){
-    importBtn.innerHTML='<span class="import-main">'+t+'</span><span class="import-sub">（可拖拽图片导入）</span>';
+    const m=importBtn.querySelector('.import-main');
+    if(m) m.textContent=t;
   }
-  ['dragenter','dragover'].forEach(ev=>importBtn.addEventListener(ev,e=>{
+  // dragover 高频触发：只在 dragenter 时更新高亮与文字，dragover 阶段仅 preventDefault，
+  // 避免反复重写按钮 DOM 导致拖放目标失效、drop 不触发。
+  let importDragOn=false;
+  importBtn.addEventListener('dragenter',e=>{
+    if(!isFileDrag(e)) return;
+    e.preventDefault();
+    if(!importDragOn){
+      importDragOn=true;
+      importBtn.classList.add('dragover');
+      setImportText('📁 松开导入图片');
+    }
+  });
+  importBtn.addEventListener('dragover',e=>{
     if(!isFileDrag(e)) return;
     e.preventDefault();
     importBtn.classList.add('dragover');
-    setImportText('📁 松开导入图片');
-  }));
+  });
   importBtn.addEventListener('dragleave',e=>{
     if(!isFileDrag(e)) return;
+    importDragOn=false;
     importBtn.classList.remove('dragover');
     setImportText('📁 导入图片');
   });
   importBtn.addEventListener('drop',e=>{
     if(!isFileDrag(e)) return;
     e.preventDefault();
+    e.stopPropagation();
+    importDragOn=false;
     importBtn.classList.remove('dragover');
     setImportText('📁 导入图片');
     const f=e.dataTransfer.files&&e.dataTransfer.files[0];
     if(f&&f.type.startsWith('image/')) importImage(f);
   });
-  // 阻止浏览器在窗口其他位置放图片时直接打开文件
+  // 整窗拖放导入：阻止浏览器直接打开文件；在窗口任意位置（含画布）松手即导入图片。
+  // 非图片文件（如草稿 .json）不在此处理，走草稿库「📥 导入草稿文件」。
   window.addEventListener('dragover',e=>{ if(isFileDrag(e)) e.preventDefault(); });
-  window.addEventListener('drop',e=>{ if(isFileDrag(e)) e.preventDefault(); });
+  window.addEventListener('drop',e=>{
+    if(!isFileDrag(e)) return;
+    e.preventDefault();
+    const f=e.dataTransfer.files&&e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('image/')) importImage(f);
+  });
   // 画布区域自身也阻止默认行为，确保在画布上松手不触发浏览器默认
   const wrap=document.querySelector('.canvas-wrap');
   ['dragover','dragenter','drop'].forEach(ev=>wrap.addEventListener(ev,e=>{
@@ -3558,6 +3689,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   function applySquareSize(n){
     n=Math.max(1,Math.min(GRID_MAX,n));
     gridWInput.value=n; gridHInput.value=n;
+    squareSlider.value=String(n);
     squareSliderVal.textContent=n;
     if(n===GRID_W&&n===GRID_H) return;
     resizeGridTo(n,n);
@@ -4033,6 +4165,97 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
     renderDraftLib();
     if(statusEl) statusEl.textContent='已复制草稿「'+copy.name+'」';
   }
+  // 在 MATCH_CARDS 里找包含该 id（色卡或其子集）的顶层色卡
+  function cardRootOf(id){
+    for(let i=0;i<MATCH_CARDS.length;i++){
+      const c=MATCH_CARDS[i];
+      if(c.id===id) return c;
+      if(c.subsets){
+        for(let j=0;j<c.subsets.length;j++) if(c.subsets[j].id===id) return c;
+      }
+    }
+    return null;
+  }
+  // 导出草稿为 .json 文件（自包含：像素、编号、导入原图、匹配色卡、标尺），可发给其他用户导入
+  function exportDraftToFile(id){
+    flushAutoSave();
+    const d=findDraft(id);
+    if(!d) return;
+    const payload={
+      app:'pixel-board-draft',
+      version:1,
+      draft:{
+        name:d.name||'草稿',
+        w:d.w, h:d.h, px:d.px, codes:d.codes||null,
+        lw:d.lw||null, lh:d.lh||null, lpx:d.lpx||null,
+        oimg:d.oimg||null,
+        card:d.card||null,
+        showCodes:!!d.showCodes,
+        rulers:Array.isArray(d.rulers)?d.rulers:[]
+      }
+    };
+    // 匹配的是用户自定义导入的色卡时内嵌色卡数据，对方无需再导入该卡也能还原编号；
+    // 内建色卡（MARD/COCO）对方自带，不内嵌以减小文件体积。
+    if(payload.draft.card){
+      const root=cardRootOf(payload.draft.card);
+      if(root && importedCardIndex(root.id)>=0){
+        payload.draft.cardData={id:root.id, name:root.name, colors:root.colors};
+      }
+    }
+    const json=JSON.stringify(payload);
+    const blob=new Blob([json],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=(d.name||'草稿').replace(/[\\/:*?"<>|]/g,'_')+'.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    if(statusEl) statusEl.textContent='已导出草稿「'+(d.name||'')+'」为草稿文件';
+  }
+  // 导入他人分享的草稿文件（.json），校验后新建草稿并打开
+  function importDraftFile(file){
+    const reader=new FileReader();
+    reader.onload=function(){
+      let data=null;
+      try{ data=JSON.parse(reader.result); }catch(e){ data=null; }
+      const dd=data&&data.draft;
+      if(!data || data.app!=='pixel-board-draft' || !dd || typeof dd.px!=='string' || !(dd.w>0) || !(dd.h>0)){
+        alert('不是有效的画板草稿文件（应为本应用导出的 .json 草稿文件）');
+        return;
+      }
+      // 校验像素 base64 长度，避免损坏文件导入后变成空白画布
+      try{
+        const pxU8=b64ToBytes(dd.px);
+        if(pxU8.length!==dd.w*dd.h*4) throw new Error('px length');
+      }catch(e){
+        alert('草稿文件已损坏，无法导入');
+        return;
+      }
+      // 草稿引用的是自定义导入色卡时，自动注册该卡（已存在则跳过，沿用对方已有的卡）
+      if(dd.cardData && dd.cardData.id && Array.isArray(dd.cardData.colors) && dd.cardData.colors.length && !cardById(dd.cardData.id)){
+        addImportedCard(dd.cardData.id, dd.cardData.name||dd.cardData.id, dd.cardData.colors, true);
+      }
+      const name=(typeof dd.name==='string'&&dd.name.trim())?dd.name.trim()+' (导入)':'导入的草稿';
+      const draft={
+        id:uid(), name:name, createdAt:Date.now(), updatedAt:nextStamp(),
+        w:dd.w, h:dd.h, px:dd.px, codes:dd.codes||null,
+        lw:dd.lw||null, lh:dd.lh||null, lpx:dd.lpx||null,
+        oimg:dd.oimg||null,
+        card:dd.card||null,
+        showCodes:!!dd.showCodes,
+        rulers:Array.isArray(dd.rulers)?dd.rulers:[]
+      };
+      drafts.push(draft);
+      saveDraftsV2();
+      renderDraftLib();
+      openDraft(draft.id);
+      if(statusEl) statusEl.textContent='已导入草稿「'+name+'」';
+    };
+    reader.onerror=function(){ alert('读取文件失败'); };
+    reader.readAsText(file);
+  }
   function renderDraftLib(){
     draftLibCount.textContent='画布草稿库（'+drafts.length+'）';
     if(!drafts.length){
@@ -4051,6 +4274,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
         +'<div class="draft-ops">'
         +'<button data-act="rename" title="重命名">✎</button>'
         +'<button data-act="dup" title="复制">⧉</button>'
+        +'<button data-act="export" title="导出草稿文件">📤</button>'
         +'<button data-act="del" title="删除">✕</button>'
         +'</div></div>');
     }
@@ -4114,6 +4338,179 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
   draftLibBtn.addEventListener('click',()=>setDraftLib(!draftLibOpen));
   draftBackBtn.addEventListener('click',()=>setDraftLib(false));
   draftNewBtn.addEventListener('click',()=>newCanvas());
+  document.getElementById('exportDraftBtn').addEventListener('click',()=>exportDraftToFile(currentDraftId));
+  document.querySelectorAll('.draft-import-btn').forEach(b=>b.addEventListener('click',()=>document.getElementById('draftFileInput').click()));
+  document.getElementById('draftFileInput').addEventListener('change',e=>{
+    if(e.target.files[0]) importDraftFile(e.target.files[0]);
+    e.target.value='';
+  });
+
+  // ---- 📖 使用说明：书页式可拖动弹窗 ----
+  const HELP_SECTIONS=[
+    {t:'尺寸',h:[
+      '· 画布尺寸可自定义（最大 500×500）：已导入图片按新尺寸重绘居中，否则最近邻放大 / 缩小现有内容',
+      '· 尺寸预设 12 / 52 / 78 / 104 / 120（按常见拼豆板大小设计）一键切换，下方「正方形」滑块同步定位；也可直接拖滑块或用宽 / 高输入框 +「应用尺寸」',
+      '· 画布已有绘制内容时锁定尺寸，避免误触拉伸畸变；撤销到空白或「🧽 清除作画痕迹」可解除锁定'
+    ]},
+    {t:'色彩',h:[
+      '· 选色：左侧调色盘点击颜色即设为当前颜色；用过的颜色进入「历史取色」，点击可再次使用',
+      '· 取色器：可直接输入色值，或用「💧 取色器」的原生取色器挑选——拖动实时预览，点「确定」才写入当前颜色',
+      '· 自定义颜色：调色盘里的自定义色块打开环形取色器自由调色，确定后加入历史取色',
+      '· 取色工具：用「💧 取色」工具点击画面吸取颜色（橡皮状态下取色会自动切回画笔）',
+      '· 色卡匹配：点击画布右上角「🎨 匹配色卡」并选择色卡，把「原图有颜色且画布当前也有颜色」的交集匹配为该色卡中最接近的颜色，空白区域保持空白',
+      '· 匹配后「🏷 标注编号」解锁：每个像素方块中心显示对应色卡编号（如 A1），放大后更清晰',
+      '· 左侧「🧮 拼豆色卡」展开列表，点击 MARD / COCO 色卡或导入的色卡弹出大色卡；色卡头部下拉可按匹配色卡的子集（24 / 48 / 72…色、全色）筛选，所选子集之外的颜色置灰、不可选中（含下方编号）；右上角「✕」可收起色卡窗口',
+      '· 隐藏边框：画布右上角「🔳 隐藏边框」可显示或隐藏像素格黑色边框',
+      '· 深浅色：顶栏最右「🌙 深色 / ☀️ 浅色」按钮切换浅色 / 深色模式'
+    ]},
+    {t:'工具栏',h:[
+      '· 工具：🖌 画笔（左键绘制）、🧽 橡皮（擦除为空白，空色块与白色珠在数据上有区分，导出时可选表示方式）、💧 取色、🪣 填充（同色连通区域）、🔖 套索、🧲 同色选择、〰 对称轴、📏 标尺；再点当前工具可取消（回到无工具状态）',
+      '· 套索选区：在画布上拖动画出任意形状的选区；「↔ 反选」选中选区之外，「✖ 清除选区」取消选择；存在选区时填充只作用于选区内像素，「✂ 删除选区内容」将选区像素恢复为空白',
+      '· 对称轴：点「〰 对称轴」开启并默认「左右」，下方展开选项行（左右 / 上下 / 双轴 / 45°斜 / 135°斜 / 双斜）切换类型、「↺ 复位轴线」回中央，再点「〰 对称轴」关闭；左右 / 上下 / 双轴可编辑模式下拖动红色轴线调整位置（吸附到方格线或格中），斜向轴过画布中心（仅正方形画布），画笔 / 橡皮按轴线镜像到对侧，可配合套索（选区与镜像求并集）；取色 / 填充 / 标尺 / 同色选择点击时自动关闭对称轴',
+      '· 标尺：每格边长对应现实中 2.6mm。前两次点击确定测量两点并生成实线，第三次点击确认生成带箭头的尺寸线与数值；Esc 取消本次标注；拖动线段平移整条标注，拖动端点移动单个端点，点击线段可「删除线段」；鼠标移到标注线上显示两测量点半圆虚线，移到测量点上显示完整虚线圆'
+    ]},
+    {t:'操作',h:[
+      '· 导入图片：点击「📁 导入图片」选择文件，或把图片拖到窗口任意位置（含画布）松开即导入；图片自动缩放到不超过当前画布尺寸并居中',
+      '· 导出 PNG：「⬇ 导出 PNG」可全画幅导出（分辨率随画幅增大而增大，上限 8192px，画幅越大编号越清晰），或「局部画幅导出」后单击画布两次分别确定对角顶点（第 2 次点击后出现「✔ 确定导出」，可拖动顶点 / 边线调整、选区内平移），点击「✔ 确定导出」按该区域高清导出，Esc 取消；空色块可选「白色 / 绿色 / 透明」，透明时仅色块周围保留辅助线',
+      '· 色号清单：匹配色卡并标注编号后，「导出 PNG」可选清单「关 / 单独 / 拼接」——单独时另存一张清单图，拼接时直接附在主图下方（留 48px 间隔）；清单与主图同宽、横排多列（每行至多 15 个色块），显示色块、编号与用量，范围与导出的主图一致；导出弹层内会预估导出尺寸与文件大小',
+      '· 清空 / 清理：「🗑 清空画布」清空全部像素；「🧽 清除作画痕迹」按导入原图重新渲染覆盖手绘痕迹（无原图时等同清空画布），同时解除尺寸锁定'
+    ]},
+    {t:'快捷键',h:[
+      '· 撤销 / 重做：Ctrl+Z 撤销 · Ctrl+Y 重做',
+      '· 保存：Ctrl+S 立即保存当前画布到草稿',
+      '· 取消：Esc 取消当前操作（标注测量 / 框选导出等）',
+      '· 视图缩放：画布内 Ctrl+滚轮 放大 / 缩小，1× 为完整视图',
+      '· 平移：放大后按住空格键或鼠标中键拖动平移，也可直接用滚轮'
+    ]},
+    {t:'画布草稿库',h:[
+      '· 画布修改会自动保存到当前草稿，也可点「💾 保存作画」或 Ctrl+S 立即保存',
+      '· 「🗂 画布草稿库」打开画廊：可「＋ 新建画布」，对草稿重命名 / 复制 / 删除，点击卡片切换画布，修改自动写回对应草稿',
+      '· 导出 / 导入：左侧「📤 导出草稿文件」导出当前画布，或草稿库卡片右上角 📤 导出任意一张草稿，生成一个 .json 草稿文件，可发给其他安装了本应用的人；对方点「📤 导出草稿文件」旁的「📥 导入草稿文件」，或在草稿库里点「📥 导入草稿文件」即可完整还原（颜色、编号、导入原图、标尺、匹配色卡）；草稿引用自定义导入的色卡时，色卡数据会随文件一并带上',
+      '· 载入没有导入原图、仅含作画痕迹的草稿时尺寸会自动锁定，防止误触拉伸畸变；「🧽 清除作画痕迹」可按导入原图重新渲染覆盖手绘痕迹（无原图时等同清空画布），同时解除锁定'
+    ]},
+    {t:'作者',h:[
+      '· 应用：像素工坊 v1.3.1',
+      '· 作者：Flashzzz42⚡',
+      '· 更新：新版本发布在 GitHub Releases：https://github.com/Flashzzz42/pixel-board',
+      '· 反馈：如有问题或建议，欢迎到 GitHub 上反馈'
+    ]}
+  ];
+  const helpOverlay=document.getElementById('helpOverlay');
+  const helpBook=document.getElementById('helpBook');
+  const helpTitlebar=document.getElementById('helpTitlebar');
+  const helpToc=document.getElementById('helpToc');
+  const helpPageEl=document.getElementById('helpPage');
+  const helpPageInfo=document.getElementById('helpPageInfo');
+  const helpPrev=document.getElementById('helpPrev');
+  const helpNext=document.getElementById('helpNext');
+  const helpClose=document.getElementById('helpClose');
+  let helpCur=0, helpPages=[], helpBlocks=[];
+  function helpLineHtml(l){
+    // 去掉行首「· 」，若以「xx：」开头的子标题则把标题和冒号加粗
+    const text=l.replace(/^· /,'');
+    const m=text.match(/^(.+?：)/);
+    return m?'<p class="h-line"><b>'+m[1]+'</b>'+text.slice(m[1].length)+'</p>':'<p class="h-line">'+text+'</p>';
+  }
+  function buildHelpPages(){
+    // 内容摊平成「标题块 + 每行一块」，逐块填充当前页；
+    // 放不下就新开一页，超一页的内容自动分页而不是滚动。
+    // 直接用真实页面元素测量，保证每页都不会出现滚动条。
+    helpPages.length=0;
+    helpBlocks=[];
+    HELP_SECTIONS.forEach((sec,si)=>{
+      helpBlocks.push({si,html:'<div class="h-title">'+sec.t+'</div>'});
+      sec.h.forEach(l=>helpBlocks.push({si,html:helpLineHtml(l)}));
+    });
+    helpPageEl.style.visibility='hidden';
+    const maxH=helpPageEl.clientHeight;
+    const measure=idxArr=>{ helpPageEl.innerHTML=idxArr.map(j=>helpBlocks[j].html).join(''); return helpPageEl.scrollHeight; };
+    let cur=[], i=0;
+    while(i<helpBlocks.length){
+      const isTitle=helpBlocks[i].html.indexOf('<div class="h-title"')===0;
+      // 每个目录从新的一页起头：遇到标题块总是先新开一页
+      if(isTitle&&cur.length){ helpPages.push(cur); cur=[]; }
+      // 标题块连同其第一条内容一起判定，避免标题孤悬页尾
+      let take=isTitle&&helpBlocks[i+1]?2:1;
+      const added=[]; for(let k=0;k<take;k++) added.push(i+k);
+      let tryBlocks=cur.concat(added);
+      if(cur.length&&measure(tryBlocks)>maxH+1){
+        helpPages.push(cur); cur=[];
+        tryBlocks=added;
+        measure(tryBlocks);
+      }
+      cur=tryBlocks;
+      i+=take;
+    }
+    if(cur.length) helpPages.push(cur);
+    helpPageEl.style.visibility='';
+  }
+  function paintHelpToc(){
+    const onPage=new Set((helpPages[helpCur]||[]).map(bi=>helpBlocks[bi].si));
+    helpToc.querySelectorAll('button').forEach(b=>{
+      b.classList.toggle('active', onPage.has(parseInt(b.dataset.sec,10)));
+    });
+  }
+  function renderHelpPage(){
+    const idxs=helpPages[helpCur]||[];
+    helpPageEl.innerHTML=idxs.map(bi=>helpBlocks[bi].html).join('');
+    helpPageInfo.textContent=(helpCur+1)+' / '+helpPages.length;
+    helpPrev.disabled=helpCur===0;
+    helpNext.disabled=helpCur===helpPages.length-1;
+    paintHelpToc();
+  }
+  function goHelp(i){
+    if(i===helpCur||i<0||i>=helpPages.length) return;
+    helpCur=i;
+    renderHelpPage();
+    helpPageEl.scrollTop=0;
+  }
+  document.getElementById('helpBtn').addEventListener('click',()=>{
+    helpOverlay.style.display='block';   // 先显示，保证分页测量用到真实的宽高
+    buildHelpPages();
+    helpToc.innerHTML='';
+    // 每个书签对应一个分类，指向该分类第一页；当前页显示的分类保持高亮
+    const firstPage=[];
+    helpPages.forEach((idxs,pi)=>idxs.forEach(bi=>{ if(firstPage[helpBlocks[bi].si]===undefined) firstPage[helpBlocks[bi].si]=pi; }));
+    HELP_SECTIONS.forEach((sec,si)=>{
+      const b=document.createElement('button');
+      b.textContent=sec.t;
+      b.dataset.sec=si;
+      b.dataset.first=firstPage[si]!==undefined?firstPage[si]:0;
+      b.addEventListener('click',()=>goHelp(parseInt(b.dataset.first,10)));
+      helpToc.appendChild(b);
+    });
+    helpCur=0;
+    renderHelpPage();
+  });
+  helpClose.addEventListener('click',()=>helpOverlay.style.display='none');
+  helpOverlay.addEventListener('mousedown',e=>{
+    if(e.target===helpOverlay) helpOverlay.style.display='none';
+  });
+  helpPrev.addEventListener('click',()=>goHelp(helpCur-1));
+  helpNext.addEventListener('click',()=>goHelp(helpCur+1));
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&helpOverlay.style.display!=='none') helpOverlay.style.display='none';
+  });
+  // 拖动标题栏移动弹窗（初始用 transform 居中，拖动时切换为 left/top 定位）
+  helpTitlebar.addEventListener('mousedown',e=>{
+    if(e.target.closest('.help-close')) return;
+    const r=helpBook.getBoundingClientRect();
+    helpBook.style.transform='none';
+    helpBook.style.left=r.left+'px';
+    helpBook.style.top=r.top+'px';
+    const dx=e.clientX-r.left, dy=e.clientY-r.top;
+    const onMove=ev=>{
+      helpBook.style.left=Math.min(Math.max(ev.clientX-dx,0),window.innerWidth-r.width)+'px';
+      helpBook.style.top=Math.min(Math.max(ev.clientY-dy,0),window.innerHeight-r.height)+'px';
+    };
+    const onUp=()=>{
+      document.removeEventListener('mousemove',onMove);
+      document.removeEventListener('mouseup',onUp);
+    };
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('mouseup',onUp);
+    e.preventDefault();
+  });
   draftLibGrid.addEventListener('click',e=>{
     if(e.target.closest('.draft-name-input')) return;  // 正在改名，忽略点击
     const card=e.target.closest('.draft-card');
@@ -4125,6 +4522,7 @@ const CARD_STORAGE_KEY='pixel_board_cards_v1';
       if(act==='del') deleteDraft(id);
       else if(act==='dup') duplicateDraft(id);
       else if(act==='rename') startRename(card,id);
+      else if(act==='export') exportDraftToFile(id);
       return;
     }
     openDraft(id);
