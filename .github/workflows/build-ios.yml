@@ -29,25 +29,23 @@ jobs:
       - name: Init iOS project
         run: npm run tauri ios init
 
-      # 关闭代码签名，产出未签名构建。生成的 pbxproj 默认不含 CODE_SIGNING_ALLOWED
-      # （所以此前按值替换不生效），这里在 CODE_SIGN_STYLE 后直接插入 NO；构建步骤再以
-      # 环境变量兜底。无签名时 Xcode 的 ipa 导出可能报退出码 70，但 .app 已生成，由
-      # 下一步手动打包成 ipa。
+      # 关闭代码签名，产出未签名构建。关键：Tauri 生成的 pbxproj 不含 CODE_SIGNING_ALLOWED
+      # 行（隐式默认签名），此前按「替换既有键」的方式因此落空。这里在每个 buildSettings
+      # 字典开头直接插入 NO，并打印命中次数以便日志核对。xcodebuild 不读环境变量构建设置，
+      # 所以必须改 pbxproj。无签名时 ipa 导出可能报退出码 70，但 .app 已生成，由下一步手动打包。
       - name: Disable code signing
         run: |
           PBX="$(find src-tauri/gen/apple -name project.pbxproj | head -1)"
           echo "PBX=$PBX"
           [ -n "$PBX" ] || { echo "::error::project.pbxproj not found"; exit 1; }
-          perl -i -pe 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Automatic; CODE_SIGNING_ALLOWED = NO; CODE_SIGNING_REQUIRED = NO;/g' "$PBX"
-          perl -i -pe 's/DEVELOPMENT_TEAM = [^;]+;//g' "$PBX"
+          perl -0777 -i -pe 's/buildSettings\s*=\s*\{/buildSettings = { CODE_SIGNING_ALLOWED = NO; CODE_SIGNING_REQUIRED = NO;/g' "$PBX"
+          COUNT="$(grep -c 'CODE_SIGNING_ALLOWED = NO' "$PBX")"
+          echo "injected CODE_SIGNING_ALLOWED=NO in $COUNT buildSettings blocks"
+          [ "$COUNT" -gt 0 ] || { echo "::error::pbxproj injection failed (no buildSettings matched)"; exit 1; }
 
       - name: Build iOS app (device)
         # --target 用 CLI 短名：aarch64=真机 / aarch64-sim=Apple Silicon 模拟器 / x86_64=Intel 模拟器
-        # CODE_SIGNING_ALLOWED=NO 环境变量会被 tauri CLI 传给 xcodebuild，双保险关签名。
         run: npm run tauri ios build -- --target aarch64
-        env:
-          CODE_SIGNING_ALLOWED: "NO"
-          CODE_SIGNING_REQUIRED: "NO"
         continue-on-error: true
 
       - name: Package unsigned IPA
