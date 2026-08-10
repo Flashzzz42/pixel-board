@@ -42,7 +42,8 @@ jobs:
           sed -i '' '/CODE_SIGN_IDENTITY = /d' "$PBX"
 
       - name: Build iOS app (device)
-        run: npm run tauri ios build -- --target aarch64-apple-ios
+        # --target 用 CLI 短名：aarch64=真机 / aarch64-sim=Apple Silicon 模拟器 / x86_64=Intel 模拟器
+        run: npm run tauri ios build -- --target aarch64
         continue-on-error: true
 
       - name: Package unsigned IPA
