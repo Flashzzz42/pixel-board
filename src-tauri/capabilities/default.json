@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "画布主窗口（纯网页，无需额外权限）",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

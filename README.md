@@ -18,13 +18,13 @@
 
 ## 安装包下载
 
-> 每个版本在 [Releases](https://github.com/Flashzzz42/pixel-board/releases) 发布。当前为 Tauri 2 打包，仅支持 **Windows 11**（x64），安装包 ~1.1MB，使用系统 WebView2，不内置浏览器引擎。
+> 每个版本在 [Releases](https://github.com/Flashzzz42/pixel-board/releases) 发布。桌面版由 **Tauri 2** 封装（Windows 用系统 WebView2，macOS 用 WKWebView，不内置浏览器引擎）；Android 版由 **Capacitor 8** 封装。
 
 | 系统 | 架构 | 安装包 | 说明 |
 | --- | --- | --- | --- |
-| Windows 11 | x64 | `pixel-board-1.3.2-win-x64-setup.exe` | NSIS 安装程序 |
-
-> macOS 版自 v1.1.0 起停止发布。
+| Windows 11 | x64 | `pixel-board-1.3.2-win-x64-setup.exe` | NSIS 安装程序，~1.1MB |
+| macOS | Apple Silicon / Intel | `.dmg` | Tauri 2 云构建（GitHub Actions），未签名首次需右键「打开」 |
+| Android | arm64 | `pixel-board-1.3.3-android.apk` | Capacitor 8，debug 签名
 
 ## 本地使用
 
@@ -33,5 +33,6 @@
 ## 技术说明
 
 - 核心是一个自包含的 `index.html`（HTML + CSS + JS 全部内联），无任何外部依赖。
-- 桌面版由 Tauri 2 封装（Windows 11，系统 WebView2），安装包仅 ~1.1MB。
+- 桌面版（Windows / macOS）由 Tauri 2 封装，系统 WebView 渲染，安装包极小。
+- Android 版由 Capacitor 8 封装（系统 WebView），导出图片走原生插件存入相册。
 - 色卡数据：`coco-colors.txt` / `mard-colors.txt`（可经应用内「导入色卡」加载）。

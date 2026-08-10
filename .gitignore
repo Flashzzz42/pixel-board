@@ -2,20 +2,18 @@
 node_modules/
 dist/
 ui/
+www/
+src-tauri/target/
+src-tauri/gen/
 
-# 本地 Tauri 打包工程（复用 D:\Pack_necessary\tauri 模板，不进入公开仓库）
-src-tauri/
-scripts/
+# Android 原生工程构建产物（android/ 本身保留待提交，产物不入库）
+android/.gradle/
+android/app/build/
+android/build/
+android/capacitor-cordova-android-plugins/build/
 
 # 本地配置
 .claude/
-
-# 本地 Electron 打包工程（已转移到私有仓库 electron-packaging-template）
-package.json
-package-lock.json
-main.js
-smoke-main.js
-.github/
 
 # 临时样例图片（未被 app 引用）
 3ba8021f2f9bdc9ffc81af0f73565c9c.png

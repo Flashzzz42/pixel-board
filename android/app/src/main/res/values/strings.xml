@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">像素工坊</string>
+    <string name="title_activity_main">像素工坊</string>
+    <string name="package_name">com.pixelboard.app</string>
+    <string name="custom_url_scheme">com.pixelboard.app</string>
+</resources>
