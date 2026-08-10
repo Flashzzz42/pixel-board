@@ -22,9 +22,9 @@
 
 | 系统 | 架构 | 安装包 | 说明 |
 | --- | --- | --- | --- |
-| Windows 11 | x64 | `pixel-board-1.3.2-win-x64-setup.exe` | NSIS 安装程序，~1.1MB |
-| macOS | Apple Silicon / Intel | `.dmg` | Tauri 2 云构建（GitHub Actions），未签名首次需右键「打开」 |
-| Android | arm64 | `pixel-board-1.3.3-android.apk` | Capacitor 8，debug 签名
+| Windows 11 | x64 | `像素工坊_1.3.2_x64-setup.exe` | NSIS 安装程序，~1.1MB |
+| macOS | Apple Silicon（M 系列） | `像素工坊_1.3.2_aarch64.dmg` | Tauri 2 云构建（GitHub Actions），未签名首次需右键「打开」 |
+| Android | arm64 | `像素工坊-v1.3.3.apk` | Capacitor 8，debug 签名
 
 ## 本地使用
 
