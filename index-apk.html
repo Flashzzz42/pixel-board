@@ -514,26 +514,26 @@ body.dark .bead-close:hover{background:#3a2430;color:#e88080}
 body.dark .bead-series-title{color:#b6b9c8;border-bottom-color:#3a3b47}
 body.dark .history .h-swatch{background:#2a2b35}
 /* ===== 安卓自适应布局（纯响应式、无页面缩放）：画布吃剩余空间，两侧工具条随屏宽自然伸缩 ===== */
-body.is-android header{
+body.is-mobile header{
   flex-wrap:nowrap;gap:6px;
   padding:6px 10px;
   padding-top:calc(6px + env(safe-area-inset-top));
 }
-body.is-android header h1{font-size:15px}
-body.is-android header .hint{display:none}
-body.is-android main{
+body.is-mobile header h1{font-size:15px}
+body.is-mobile header .hint{display:none}
+body.is-mobile main{
   gap:8px;padding:8px;min-height:0;
   padding-left:calc(8px + env(safe-area-inset-left));
   padding-right:calc(8px + env(safe-area-inset-right));
 }
-body.is-android .side-panel,
-body.is-android aside{
+body.is-mobile .side-panel,
+body.is-mobile aside{
   flex:none;width:clamp(132px, 17vw, 300px);
   padding:10px;container-type:inline-size;
 }
-body.is-android .canvas-area{flex:1;min-width:0}
-body.is-android .canvas-wrap{padding:8px}
-body.is-android .bead-panel{
+body.is-mobile .canvas-area{flex:1;min-width:0}
+body.is-mobile .canvas-wrap{padding:8px}
+body.is-mobile .bead-panel{
   position:fixed;top:8px;right:8px;bottom:8px;
   width:min(400px,44vw);z-index:40;border-radius:10px;
   box-shadow:-4px 0 24px rgba(0,0,0,.22);
@@ -801,12 +801,19 @@ body.is-android .bead-panel{
   //      拖动滑块时页面不随之缩放（避免光标偏离滑块导致失控），松开后生效；「− / ＋」每次微调 10%；
   //      显示 100% 即默认比例（实际 80% 缩放），重置回到默认 ----
   const __tauri = window.__TAURI__ && window.__TAURI__.core && window.__TAURI__.core.invoke;
-  // 安卓（Capacitor）标记：仅用于命中自适应布局 CSS。这里不引入页面级 CSS zoom /
-  // transform 缩放——缩放会让触点坐标与 getBoundingClientRect 空间错位（真机已踩坑），
-  // 自适应布局用纯 vw/容器宽度实现，坐标始终 1:1 一致。
+  // 移动端标记：仅用于命中自适应布局 CSS。这里不引入页面级 CSS zoom / transform 缩放——
+  // 缩放会让触点坐标与 getBoundingClientRect 空间错位（安卓真机已踩坑），自适应布局用
+  // 纯 vw/容器宽度实现，坐标始终 1:1 一致。安卓（Capacitor）有 isNativePlatform；
+  // iOS（Tauri WKWebView）无 Capacitor，用 UA 判断，再异步用 Tauri platform() 兜底。
   const isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform);
-  if(isCapacitor) document.body.classList.add('is-android');
-  // ---- 导出路由：安卓经原生插件写相册/下载目录，桌面/网页走 <a download> ----
+  const isMobile = isCapacitor || /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile) document.body.classList.add('is-mobile');
+  if(!isMobile && window.__TAURI__ && window.__TAURI__.os && window.__TAURI__.os.platform){
+    window.__TAURI__.os.platform().then(function(p){
+      if(p === 'ios' || p === 'android') document.body.classList.add('is-mobile');
+    }).catch(function(){});
+  }
+  // ---- 导出路由：安卓经原生插件写相册/下载目录，iOS（Tauri 插件）走原生；桌面/网页走 <a download> ----
   function nativeExportBridge(){
     if(!isCapacitor) return null;
     try{
@@ -843,7 +850,7 @@ body.is-android .bead-panel{
   const UI_ZOOM_BASE = 0.8;
   const ZOOM_MIN = 50, ZOOM_MAX = 250;  // 显示百分比范围
   let uiZoom = +(localStorage.getItem('pixel_board_ui_zoom') || UI_ZOOM_BASE);
-  if(__tauri){
+  if(__tauri && !isMobile){
     function dispPct(){ return Math.round(uiZoom / UI_ZOOM_BASE * 100); }
     function setZoomLabel(d){ if(zoomVal) zoomVal.textContent = d + '%'; }
     function applyZoomPct(p){

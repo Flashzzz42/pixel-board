@@ -1,0 +1,69 @@
+name: Build iOS
+
+# 未签名 ipa：无 Apple secrets，构建后用户用 AltStore / Sideloadly（Windows 可装）侧载，
+# 用自己的免费 Apple ID 签名并每 7 天自动续签。仅 workflow_dispatch 手动触发（试水阶段）。
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - run: npm ci
+
+      # 生成 iOS Xcode 工程（gen/apple/ 不入库，每次构建重新生成）。
+      - name: Init iOS project
+        run: npm run tauri ios init
+
+      # 关闭代码签名，产出未签名构建。新版 CLI（PR #10854）无证书时会自动跳过签名，
+      # 这里显式关掉作为兜底；无签名时 Xcode 的 ipa 导出可能报退出码 70，但 .app 已生成，
+      # 由下一步手动打包成 ipa。
+      - name: Disable code signing
+        run: |
+          PBX="$(find src-tauri/gen/apple -name project.pbxproj | head -1)"
+          echo "PBX=$PBX"
+          [ -n "$PBX" ] || { echo "::error::project.pbxproj not found"; exit 1; }
+          sed -i '' 's/CODE_SIGNING_ALLOWED = YES;/CODE_SIGNING_ALLOWED = NO;/g' "$PBX"
+          sed -i '' '/DEVELOPMENT_TEAM = /d' "$PBX"
+          sed -i '' '/CODE_SIGN_IDENTITY = /d' "$PBX"
+
+      - name: Build iOS app (device)
+        run: npm run tauri ios build -- --target aarch64-apple-ios
+        continue-on-error: true
+
+      - name: Package unsigned IPA
+        run: |
+          set -e
+          IPA="$(find src-tauri/gen -name '*.ipa' 2>/dev/null | head -1)"
+          if [ -n "$IPA" ]; then
+            echo "CLI produced ipa: $IPA"
+            cp "$IPA" pixel-board-ios.ipa
+          else
+            APP="$(find src-tauri/gen -type d -name '*.app' | head -1)"
+            echo "Packaging from .app: $APP"
+            [ -n "$APP" ] || { echo "::error::no .app or .ipa produced"; exit 1; }
+            rm -rf Payload && mkdir -p Payload
+            cp -R "$APP" Payload/
+            zip -r -q pixel-board-ios.ipa Payload
+          fi
+          echo "IPA size: $(du -h pixel-board-ios.ipa | cut -f1)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: pixel-board-ios.ipa
+          if-no-files-found: error
