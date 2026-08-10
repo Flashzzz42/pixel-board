@@ -5,6 +5,12 @@ description = "拼豆像素画板"
 authors = ["liusuyan"]
 edition = "2021"
 
+# Tauri 移动端要求 app 的 Rust 代码是库（iOS 编成静态库链接进 Swift app），
+# main.rs 只作桌面入口薄壳调用 run()。
+[lib]
+name = "pixel_board_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
